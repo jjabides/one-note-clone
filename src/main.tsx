@@ -2,9 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
+import InitializationLayer from './InitializationLayer.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
-    <App />
+  <InitializationLayer></InitializationLayer>
   // </React.StrictMode>,
 )

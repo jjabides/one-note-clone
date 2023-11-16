@@ -1,138 +1,69 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
-import { IDBPDatabase, openDB } from 'idb'
-
-interface Section {
-  id: string;
-  name: string;
-  pageIds: string[];
-  date: Date;
-}
-
-interface Page {
-  id: string;
-  sectionId: string;
-  name: string;
-  content: string;
-}
-
-interface ContextMenu {
-  top: number;
-  left: number;
-  items: ContextMenuItem[];
-}
-
-interface ContextMenuItem {
-  name: string;
-  icon: string;
-  action: () => void;
-}
+import { IDBPDatabase } from 'idb';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
 
-function App() {
-  const [db, setDb] = useState<IDBPDatabase>();
-
-  // Load data from IndexedDB
-  useEffect(() => {
-    async function fetchData() {
-      const db = await openDB('one-note-db', 2, {
-        upgrade: (db) => {
-          if (!db.objectStoreNames.contains('sections')) {
-            const sectionsObjectStore = db.createObjectStore('sections', { keyPath: 'id', autoIncrement: true });
-            const id = crypto.randomUUID();
-            const pageId = crypto.randomUUID();
-
-            // Add default section
-            sectionsObjectStore.add({
-              id,
-              name: "Section 1",
-              pageIds: [pageId],
-              date: new Date()
-            })
-
-            if (!db.objectStoreNames.contains('pages')) {
-              const pagesObjectStore = db.createObjectStore('pages', { keyPath: 'id' });
-              pagesObjectStore.createIndex('sectionId', 'sectionId', { unique: false });
-
-              // Add default page
-              pagesObjectStore.add({
-                id: pageId,
-                sectionId: id,
-                name: "Page 1",
-                content: "",
-              })
-            }
-          }
-        },
-      });
-
-      // Initialize sections and pages
-      let sections = await db
-        .transaction('sections')
-        .objectStore('sections')
-        .getAll();
-
-      sections.sort((a: Section, b: Section) => a.date.getTime() < b.date.getTime() ? -1 : 1);
-
-      const defaultSectionId = localStorage.getItem('defaultSectionId');
-
-      if (defaultSectionId) {
-        const selectedSection: Section = sections.find((section: Section) => section.id === defaultSectionId);
-        setSelectedSection(selectedSection);
-      } else if (sections.length > 0) {
-        setSelectedSection(sections[0])
-      }
-
-      setSections(sections);
-      setDb(db);
-    }
-
-    fetchData();
-  }, []);
-
-
-  const [sections, setSections] = useState<Section[]>([]);
-  const [selectedSection, setSelectedSection] = useState<Section | null>(null);
-  const [pages, setPages] = useState<Page[] | null>([]);
-  const [selectedPage, setSelectedPage] = useState<Page | null>(null);
-  const [contextMenu, setContextMenu] = useState<ContextMenu | null>(null);
+let initialRender = true;
+function App({ initialProps }: { initialProps: InitialProps }) {
+  const db: IDBPDatabase = initialProps.db;
+  const [sections, setSections] = useState<Section[]>(initialProps.sections);
+  const [selectedSection, setSelectedSection] = useState<Section | undefined>(initialProps.selectedSection);
+  const [pages, setPages] = useState<Page[] | undefined>(initialProps.pages);
+  const [selectedPage, setSelectedPage] = useState<Page | undefined>(undefined);
+  const [contextMenu, setContextMenu] = useState<ContextMenu>();
   const [content, setContent] = useState(() => {
     let content = localStorage.getItem('content')
     return content === null ? "" : JSON.parse(content)
   })
   const [modal, setModal] = useState(false);
 
-  // Update update defaultSectionId and pages when selectedSection changes
+  /**
+   * TODO:
+   * 
+   */
+
+  // Update defaultSectionId and pages when selectedSection changes
   useEffect(() => {
-    if (!db) return;
+    if (initialRender) return;
 
     if (!selectedSection) {
-      setPages(null);
+      setPages(undefined);
+      localStorage.removeItem('defaultSectionId');
       return;
     }
 
     localStorage.setItem('defaultSectionId', selectedSection.id);
-
-    async function initializePages() {
-      const pages = await db
-        ?.transaction('pages')
-        .objectStore('pages')
-        .index('sectionId')
-        .getAll(selectedSection?.id);
-
-      setPages(pages as Page[]);
-    }
-    initializePages();
+    retrievePages();
   }, [selectedSection]);
+
+  // Update sectionOrder array upon sections changes
+  useEffect(() => {
+    if (initialRender) return;
+
+    localStorage.setItem('sectionOrder', JSON.stringify(sections.map((section) => section.id)));
+  }, [sections]);
+
+  // Update pageOrder array upon pages change
+  useEffect(() => {
+    if (initialRender) return;
+
+    if (pages && selectedSection) {
+      selectedSection.pageOrder =  pages.map(page => page.id);
+      updateSection(selectedSection);
+    }
+  }, [pages])
+
+  // Set initialRender flag
+  useEffect(() => { initialRender = false }, []);
 
   function onContextMenu(e: any, items?: ContextMenuItem[]) {
     e.preventDefault();
     e.stopPropagation();
 
     if (!items) {
-      setContextMenu(null)
+      setContextMenu(undefined)
       return;
     }
 
@@ -144,13 +75,47 @@ function App() {
     });
   }
 
+  async function retrieveSections() {
+    const sections = await db
+      ?.transaction('sections')
+      .objectStore('sections')
+      .getAll() as Section[];
+
+    let sectionOrderStr = localStorage.getItem('sectionOrder');
+
+    if (!sectionOrderStr) {
+      setSections(sections);
+      return;
+    }
+
+    let sectionOrder = JSON.parse(sectionOrderStr) as string[];
+    const sectionsMap = new Map<string, Section>(sections.map((section) => [section.id, section]));
+    let orderedSections: Section[] = sectionOrder.map(id => sectionsMap.get(id)) as Section[];
+
+    setSections(orderedSections);
+  }
+
+  async function retrievePages() {
+    const pages = await db
+      ?.transaction('pages')
+      .objectStore('pages')
+      .index('sectionId')
+      .getAll(selectedSection?.id) as Page[];
+
+    const pagesMap = new Map<string, Page>(pages.map(page => [page.id, page]));
+    let orderedPages = selectedSection?.pageOrder.map(id => pagesMap.get(id)) as Page[];
+    orderedPages = orderedPages.filter(page => page);
+    setPages(orderedPages);
+  }
+
+
   function executeContextMenuItem(e: any, action: () => void) {
     action();
   }
 
   async function deleteSection(id: string) {
     if (selectedSection && selectedSection.id === id) {
-      setSelectedSection(null);
+      setSelectedSection(undefined);
     }
 
     await db
@@ -158,37 +123,32 @@ function App() {
       .objectStore('sections')
       .delete(id);
 
-    const sections = await db
-      ?.transaction('sections')
-      .objectStore('sections')
-      .getAll() as Section[]
-    sections.sort((a: Section, b: Section) => a.date.getTime() < b.date.getTime() ? -1 : 1);
-
-    setSections(sections);
+    await retrieveSections();
   }
 
   async function addSection(e: any) {
     e.preventDefault();
 
+    const newSection: Section = {
+      id: crypto.randomUUID(),
+      name: e.target[0].value,
+      pageOrder: [],
+      date: new Date(),
+    }
+
     await db
       ?.transaction('sections', 'readwrite')
       .objectStore('sections')
-      .add({
-        id: crypto.randomUUID(),
-        name: e.target[0].value,
-        pageIds: [],
-        date: new Date()
-      })
+      .add(newSection)
 
-    const sections = await db
-      ?.transaction('sections')
-      .objectStore('sections')
-      .getAll() as Section[]
-
-    sections.sort((a: Section, b: Section) => a.date.getTime() < b.date.getTime() ? -1 : 1);
-
-    setSections(sections)
+    await retrieveSections();
     setModal(false);
+  }
+
+  async function updateSection(section: Section) {
+    await db.transaction('sections', 'readwrite')
+      .objectStore('sections')
+      .put(section)
   }
 
   function onSelectSection(sectionId: string) {
@@ -196,7 +156,7 @@ function App() {
   }
 
   return (
-    <div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(null)}>
+    <div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
       <header>
       </header>
       <main>
