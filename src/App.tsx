@@ -11,12 +11,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
   const [sections, setSections] = useState<Section[]>(initialProps.sections);
   const [selectedSection, setSelectedSection] = useState<Section | undefined>(initialProps.selectedSection);
   const [pages, setPages] = useState<Page[] | undefined>(initialProps.pages);
-  const [selectedPage, setSelectedPage] = useState<Page | undefined>(undefined);
+  const [selectedPage, setSelectedPage] = useState<Page | undefined>(initialProps.selectedPage);
   const [contextMenu, setContextMenu] = useState<ContextMenu>();
-  const [content, setContent] = useState(() => {
-    let content = localStorage.getItem('content')
-    return content === null ? "" : JSON.parse(content)
-  })
   const [modal, setModal] = useState(false);
 
   /**
@@ -50,12 +46,12 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     if (initialRender) return;
 
     if (pages && selectedSection) {
-      selectedSection.pageOrder =  pages.map(page => page.id);
+      selectedSection.pageOrder = pages.map(page => page.id);
       updateSection(selectedSection);
     }
   }, [pages])
 
-  // Set initialRender flag
+  // Set initialRender flag to enable above useEffects
   useEffect(() => { initialRender = false }, []);
 
   function onContextMenu(e: any, items?: ContextMenuItem[]) {
@@ -118,6 +114,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       setSelectedSection(undefined);
     }
 
+    const ids = [...sections.filter(section => section.id !== id).map(section => section.id)];
+    localStorage.setItem('sectionOrder', JSON.stringify(ids));
+
     await db
       ?.transaction('sections', 'readwrite')
       .objectStore('sections')
@@ -136,6 +135,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       date: new Date(),
     }
 
+    const ids = [...sections.map(section => section.id), newSection.id];
+    localStorage.setItem('sectionOrder', JSON.stringify(ids));
+
     await db
       ?.transaction('sections', 'readwrite')
       .objectStore('sections')
@@ -153,6 +155,16 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
   function onSelectSection(sectionId: string) {
     setSelectedSection(sections.find(section => section.id === sectionId) as Section)
+  }
+
+  async function updatePageContent(newContent: string) {
+    await db
+    .transaction('pages', 'readwrite')
+    .objectStore('pages')
+    .put({
+      ...selectedPage,
+      content: newContent
+    })
   }
 
   return (
@@ -193,8 +205,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
           </div>
         </nav>
         <section className="content">
-          <textarea value={content} onChange={e => setContent(e.target.value)}>
-          </textarea>
+          {
+            selectedPage && <textarea value={selectedPage.content} onChange={e => updatePageContent(e.target.value)}></textarea>
+          }
         </section>
       </main>
       {

@@ -9,7 +9,7 @@ export default function InitializationLayer() {
     // Load data from IndexedDB
     useEffect(() => {
         async function fetchData() {
-            const db = await openDB('one-note-db', 2, {
+            const db = await openDB('one-note-db', 1, {
                 upgrade: (db) => {
                     if (!db.objectStoreNames.contains('sections')) {
                         const sectionsObjectStore = db.createObjectStore('sections', { keyPath: 'id', autoIncrement: true });
@@ -78,7 +78,7 @@ export default function InitializationLayer() {
                     .transaction('pages')
                     .objectStore('pages')
                     .index('sectionId')
-                    .getAll() as Page[]
+                    .getAll(selectedSection.id) as Page[]
             }
 
             setInitialProps({
