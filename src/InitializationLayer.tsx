@@ -9,7 +9,7 @@ export default function InitializationLayer() {
     // Load data from IndexedDB
     useEffect(() => {
         async function fetchData() {
-            const db = await openDB('one-note-db', 1, {
+            const db = await openDB('one-note-db', 3, {
                 upgrade: (db) => {
                     if (!db.objectStoreNames.contains('sections')) {
                         const sectionsObjectStore = db.createObjectStore('sections', { keyPath: 'id', autoIncrement: true });
@@ -36,18 +36,21 @@ export default function InitializationLayer() {
                                 id: pageId,
                                 sectionId: id,
                                 name: "Page 1",
-                                content: "",
                                 date: new Date(),
                             }
 
                             pagesObjectStore.add(defaultPage)
                         }
                     }
+
+                    if (!db.objectStoreNames.contains('pageContent')) {
+                        db.createObjectStore('pageContent', { keyPath: 'id' });
+                    }
                 },
             });
 
             // Initialize sections and pages
-            let sections = await db
+            let sections: Section[] = await db
                 .transaction('sections')
                 .objectStore('sections')
                 .getAll();
@@ -61,32 +64,14 @@ export default function InitializationLayer() {
                 sections = sections.filter(section => section);
             }
 
-            const defaultSectionId = localStorage.getItem('defaultSectionId');
-            let selectedSection: Section | undefined = undefined;
-            let selectedPage: Page | undefined = undefined;
-            let pages: Page[] = [];
-
-            if (defaultSectionId) {
-                selectedSection = sections.find((section: Section) => section.id === defaultSectionId);
-            } else if (sections.length > 0) {
-                selectedSection = sections[0];
-                localStorage.setItem('defaultSectionId', selectedSection?.id as string);
-            }
-
-            if (selectedSection) {
-                pages = await db
-                    .transaction('pages')
-                    .objectStore('pages')
-                    .index('sectionId')
-                    .getAll(selectedSection.id) as Page[]
-            }
+            const defaultSectionId = localStorage.getItem('defaultSectionId') as string;
+            const defaultPageId = localStorage.getItem('defaultPageId') as string;
 
             setInitialProps({
                 db,
                 sections,
-                pages,
-                selectedSection,
-                selectedPage,
+                defaultSectionId,
+                defaultPageId,
             })
         }
 

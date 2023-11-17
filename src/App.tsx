@@ -5,54 +5,71 @@ import { IDBPDatabase } from 'idb';
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
 
-let initialRender = true;
 function App({ initialProps }: { initialProps: InitialProps }) {
   const db: IDBPDatabase = initialProps.db;
   const [sections, setSections] = useState<Section[]>(initialProps.sections);
-  const [selectedSection, setSelectedSection] = useState<Section | undefined>(initialProps.selectedSection);
-  const [pages, setPages] = useState<Page[] | undefined>(initialProps.pages);
-  const [selectedPage, setSelectedPage] = useState<Page | undefined>(initialProps.selectedPage);
+  const [pages, setPages] = useState<Page[]>();
+  const [selectedSectionId, setSelectedSectionId] = useState<string>(initialProps.defaultSectionId);
+  const [selectedPageId, setSelectedPageId] = useState<string>(initialProps.defaultPageId)
+
+  const selectedSection = useMemo(() => {
+    if (!selectedSectionId || !sections) return undefined;
+    return sections.find(section => section.id === selectedSectionId);
+  }, [selectedSectionId, sections]);
+
+  const selectedPage = useMemo(() => {
+    if (!selectedPageId || !pages) return undefined;
+    return pages.find(page => page.id === selectedPageId);
+  }, [selectedPageId, pages]);
+
   const [contextMenu, setContextMenu] = useState<ContextMenu>();
   const [modal, setModal] = useState(false);
 
-  /**
-   * TODO:
-   * 
-   */
+  const [pageContent, setPageContent] = useState<PageContent>();
 
-  // Update defaultSectionId and pages when selectedSection changes
+  // Update pages when selectedSection changes 
   useEffect(() => {
-    if (initialRender) return;
-
     if (!selectedSection) {
       setPages(undefined);
-      localStorage.removeItem('defaultSectionId');
       return;
     }
 
-    localStorage.setItem('defaultSectionId', selectedSection.id);
-    retrievePages();
-  }, [selectedSection]);
+    getPages();
+  }, [selectedSection])
 
-  // Update sectionOrder array upon sections changes
+  // Set pageContent when selectedPage is set
   useEffect(() => {
-    if (initialRender) return;
-
-    localStorage.setItem('sectionOrder', JSON.stringify(sections.map((section) => section.id)));
-  }, [sections]);
-
-  // Update pageOrder array upon pages change
-  useEffect(() => {
-    if (initialRender) return;
-
-    if (pages && selectedSection) {
-      selectedSection.pageOrder = pages.map(page => page.id);
-      updateSection(selectedSection);
+    if (!selectedPage) {
+      setPageContent(undefined);
+      return;
     }
-  }, [pages])
 
-  // Set initialRender flag to enable above useEffects
-  useEffect(() => { initialRender = false }, []);
+    getPageContent();
+  }, [selectedPage])
+
+  function updateDefaultSectionId(id?: string) {
+    if (!id) {
+      localStorage.removeItem('defaultSectionId');
+    } else {
+      localStorage.setItem('defaultSectionId', id);
+    }
+
+    setSelectedSectionId(id as string);
+  }
+
+  function updateDefaultPageId(id?: string) {
+    if (!id) {
+      localStorage.removeItem('defaultPageId');
+    } else {
+      localStorage.setItem('defaultPageId', id);
+    }
+
+    setSelectedPageId(id as string);
+  }
+
+  function updateSectionOrder() {
+    localStorage.setItem('sectionOrder', JSON.stringify(sections.map((section) => section.id)));
+  }
 
   function onContextMenu(e: any, items?: ContextMenuItem[]) {
     e.preventDefault();
@@ -71,7 +88,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     });
   }
 
-  async function retrieveSections() {
+  async function getSections() {
     const sections = await db
       ?.transaction('sections')
       .objectStore('sections')
@@ -91,12 +108,13 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     setSections(orderedSections);
   }
 
-  async function retrievePages() {
+  async function getPages() {
+
     const pages = await db
       ?.transaction('pages')
       .objectStore('pages')
       .index('sectionId')
-      .getAll(selectedSection?.id) as Page[];
+      .getAll(selectedSectionId) as Page[];
 
     const pagesMap = new Map<string, Page>(pages.map(page => [page.id, page]));
     let orderedPages = selectedSection?.pageOrder.map(id => pagesMap.get(id)) as Page[];
@@ -104,6 +122,19 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     setPages(orderedPages);
   }
 
+  async function getPageContent() {
+    let pageContent: PageContent = await db
+    .transaction('pageContent')
+    .objectStore('pageContent')
+    .get(selectedPageId);
+
+    if (!pageContent) pageContent = {
+      id: selectedPageId,
+      content: ""
+    }
+
+    setPageContent(pageContent);
+  }
 
   function executeContextMenuItem(e: any, action: () => void) {
     action();
@@ -111,7 +142,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
   async function deleteSection(id: string) {
     if (selectedSection && selectedSection.id === id) {
-      setSelectedSection(undefined);
+      updateDefaultSectionId(undefined);
     }
 
     const ids = [...sections.filter(section => section.id !== id).map(section => section.id)];
@@ -122,7 +153,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       .objectStore('sections')
       .delete(id);
 
-    await retrieveSections();
+    await getSections();
   }
 
   async function addSection(e: any) {
@@ -143,28 +174,90 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       .objectStore('sections')
       .add(newSection)
 
-    await retrieveSections();
+    await getSections();
     setModal(false);
   }
 
-  async function updateSection(section: Section) {
-    await db.transaction('sections', 'readwrite')
-      .objectStore('sections')
-      .put(section)
-  }
+  async function addPage() {
+    if (!selectedSection || !pages) return;
 
-  function onSelectSection(sectionId: string) {
-    setSelectedSection(sections.find(section => section.id === sectionId) as Section)
-  }
+    let newPage: Page = {
+      id: crypto.randomUUID(),
+      sectionId: selectedSection.id,
+      date: new Date(),
+      name: 'Page ' + (pages.length + 1),
+    }
 
-  async function updatePageContent(newContent: string) {
+    // Update selected section
+    let newSelectedSection: Section = { ...selectedSection, pageOrder: [...selectedSection.pageOrder, newPage.id] }
     await db
-    .transaction('pages', 'readwrite')
-    .objectStore('pages')
-    .put({
-      ...selectedPage,
-      content: newContent
-    })
+      .transaction('sections', 'readwrite')
+      .objectStore('sections')
+      .put(newSelectedSection);
+
+    // Add page
+    await db
+      .transaction('pages', 'readwrite')
+      .objectStore('pages')
+      .add(newPage)
+
+    // Get updated sections
+    await getSections();
+
+    // Get updated pages
+    await getPages()
+  }
+
+  async function deletePage(pageId: string) {
+    if (!selectedSection || !pages) return;
+
+    // Update selected section
+    const newPageOrder = selectedSection.pageOrder.filter((id) => id !== pageId);
+    const newSelectedSection: Section = { ...selectedSection, pageOrder: newPageOrder }
+
+    await db
+      .transaction('sections', 'readwrite')
+      .objectStore('sections')
+      .put(newSelectedSection);
+
+    // Delete page
+    await db
+      .transaction('pages', 'readwrite')
+      .objectStore('pages')
+      .delete(pageId)
+
+    // Delete page content
+    await db
+    .transaction('pageContent', 'readwrite')
+    .objectStore('pageContent')
+    .delete(pageId);
+
+
+    // Update pages
+    await getPages()
+  }
+
+  let updatePageContentTimer: any;
+  async function updatePageContent(content: string) {
+    const newPageContent: PageContent = {
+      ...pageContent as PageContent,
+      content,
+    }
+
+    if (updatePageContentTimer) {
+      clearTimeout(updatePageContentTimer);
+    }
+
+    // Throttle update
+    updatePageContentTimer = setTimeout(async () => {
+      await db
+        .transaction('pageContent', 'readwrite')
+        .objectStore('pageContent')
+        .put(newPageContent)
+      updatePageContentTimer = undefined;
+    }, 300)
+
+    setPageContent(newPageContent);
   }
 
   return (
@@ -178,8 +271,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
             <ul>
               {
                 sections.map(({ id, name }) => (
-                  <li className={`btn pad-8-16 ${selectedSection && id === selectedSection.id ? 'selected' : ''}`} key={id}
-                    onClick={() => onSelectSection(id)}
+                  <li className={`btn pad-8-16 ${id === selectedSectionId ? 'selected' : ''}`} key={id}
+                    onClick={() => updateDefaultSectionId(id)}
                     onContextMenu={e => onContextMenu(e, [{
                       name: "Delete",
                       icon: "",
@@ -197,16 +290,21 @@ function App({ initialProps }: { initialProps: InitialProps }) {
             <ul>
               {
                 pages && pages.map((page) => (
-                  <li className="btn pad-8-16" key={page.id}>{page.name}</li>
+                  <li
+                    className={`btn pad-8-16 ${page.id === selectedPageId ? 'selected' : ''}`}
+                    key={page.id}
+                    onClick={() => updateDefaultPageId(page.id)}>
+                    {page.name}
+                  </li>
                 ))
               }
             </ul>
-            <div className="btn add-page pad-12-16">Add Page</div>
+            <div className="btn add-page pad-12-16" onClick={addPage}>Add Page</div>
           </div>
         </nav>
         <section className="content">
           {
-            selectedPage && <textarea value={selectedPage.content} onChange={e => updatePageContent(e.target.value)}></textarea>
+            pageContent && <textarea value={pageContent.content} onChange={e => updatePageContent(e.target.value)}></textarea>
           }
         </section>
       </main>
