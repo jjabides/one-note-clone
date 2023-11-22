@@ -10,17 +10,14 @@ function App({ initialProps }: { initialProps: InitialProps }) {
   const [sections, setSections] = useState<Section[]>(initialProps.sections);
   const [pages, setPages] = useState<Page[]>();
   const [selectedSectionId, setSelectedSectionId] = useState<string>(initialProps.defaultSectionId);
-  const [selectedPageId, setSelectedPageId] = useState<string>(initialProps.defaultPageId)
+  let [selectedPageId, setSelectedPageId] = useState<string>(initialProps.defaultPageId)
 
   const selectedSection = useMemo(() => {
     if (!selectedSectionId || !sections) return undefined;
     return sections.find(section => section.id === selectedSectionId);
   }, [selectedSectionId, sections]);
 
-  const selectedPage = useMemo(() => {
-    if (!selectedPageId || !pages) return undefined;
-    return pages.find(page => page.id === selectedPageId);
-  }, [selectedPageId, pages]);
+  const [selectedPage, setSelectedPage] = useState<Page>();
 
   const [contextMenu, setContextMenu] = useState<ContextMenu>();
   const [modal, setModal] = useState(false);
@@ -46,6 +43,16 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
     getPageContent();
   }, [selectedPage])
+  
+
+  useEffect(() => {
+    if (!selectedPageId || !pages) {
+      setSelectedPage(undefined);
+      return;
+    }
+
+    setSelectedPage(pages.find(page => page.id === selectedPageId))
+  }, [selectedPageId, pages])
 
   function updateDefaultSectionId(id?: string) {
     if (!id) {
@@ -79,6 +86,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       setContextMenu(undefined)
       return;
     }
+
+    selectedPageId = "";
 
     // TODO: Make sure client window fits within screen space (use ResizeObserver?)
     setContextMenu({
@@ -273,9 +282,12 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     .transaction('pages', 'readwrite')
     .objectStore('pages')
     .put(newPage);
+    
+    let page = pages?.find(page => page.id === selectedPage?.id);
+    if (page) page.name = name;
 
-    // Get updated pages
-    await getPages();
+    setPages(pages);
+    setSelectedPage(newPage);
   }
 
   return (
@@ -327,8 +339,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
         </nav>
         <section className="content">
           {
-            pageContent && <>
-            <input className="title" value={selectedPage?.name} onChange={(e) => updatePageName(e.target.value)}></input>
+            selectedPage && pageContent && <>
+            <input className="title" type="text" value={selectedPage.name} onChange={(e) => updatePageName(e.target.value)}/>
             <hr></hr>
             <textarea value={pageContent.content} onChange={e => updatePageContent(e.target.value)}></textarea>
             </>

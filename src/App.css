@@ -25,6 +25,10 @@ nav {
   grid-template-columns: 1fr 1fr;
 }
 
+.sections, .pages {
+  width: 100%;
+}
+
 section.content {
   height: 100%;
   width: 100%;
@@ -46,7 +50,7 @@ section textarea {
 .content .title {
   background-color: transparent;
   border: none;
-  width: 200px;
+  width: 400px;
   height: 40px;
   color: black;
   font-size: 24px;
@@ -87,6 +91,10 @@ ul {
 
 ul li {
   height: 40px;
+  width: 256px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .btn {
