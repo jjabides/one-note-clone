@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import { IDBPDatabase } from 'idb';
 
@@ -45,7 +45,14 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     }
 
     getPageContent();
-  }, [selectedPage])
+
+    // Preset title value
+    const titleEl = document.getElementById('title')
+    if (titleEl) {
+      titleEl.textContent = selectedPage.name;
+      titleEl.focus()
+    }
+  }, [selectedPage]);
 
   function updateDefaultSectionId(id?: string) {
     if (!id) {
@@ -333,14 +340,11 @@ function App({ initialProps }: { initialProps: InitialProps }) {
           </div>
         </nav>
         <section className="content">
-          {
-            selectedPage && pageContent &&
-            <div key={selectedPageId} className="content-cont">
-              <input className="title" type="text" autoFocus={true} value={selectedPage.name} onChange={(e) => updatePageName(e.target.value)} />
-              <hr></hr>
-              <textarea value={pageContent.content} onChange={e => updatePageContent(e.target.value)}></textarea>
-            </div>
-          }
+          <div className="title-cont">
+            {selectedPage && <div className="title" id="title" contentEditable={true} onInput={e => updatePageName(e.currentTarget.textContent as string)}>{ }</div>}
+          </div>
+          {pageContent && <textarea value={pageContent.content} onChange={e => updatePageContent(e.target.value)}></textarea>}
+
         </section>
       </main>
       {

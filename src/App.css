@@ -32,20 +32,13 @@ nav {
 section.content {
   height: 100%;
   width: 100%;
-}
-
-.content-cont {
-  height: 100%;
-  width: 100%;
   display: grid;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 8px;
+  padding: 8px;
 }
 
-section hr {
-  width: 100%;
-}
-
-section textarea {
+section .page-content {
   height: 100%;
   width: 100%;
   color: black;
@@ -55,20 +48,20 @@ section textarea {
 .content .title {
   background-color: transparent;
   border: none;
-  width: 400px;
-  height: 40px;
   color: black;
   font-size: 24px;
   padding: 0px 8px;
-}
-
-input:focus, textarea:focus {
+  min-height: 40px;
+  word-break: break-all;
+  display: inline-block;
+  min-width: 300px;
   outline: none;
+  border-bottom: 1px solid rgba(1, 1, 1, 0.3);
 }
 
 textarea {
   background-color: transparent;
-  border: none;
+  color: black;
   padding: 0px 8px;
 }
 
