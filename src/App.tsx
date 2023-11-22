@@ -5,6 +5,31 @@ import { IDBPDatabase } from 'idb';
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
 
+const MONTH_MAP: any = {
+  'Jan': 'January',
+  'Feb': 'February',
+  'Mar': 'March',
+  'Apr': 'April',
+  'May': 'May',
+  'Jun': 'June',
+  'Jul': 'July',
+  'Aug': 'August',
+  'Sep': 'September',
+  'Oct': 'October',
+  'Nov': 'November',
+  'Dec': 'December',
+}
+
+const WEEK_MAP: any = {
+  'Mon': 'Monday',
+  'Tue': 'Tuesday',
+  'Wed': 'Wednesday',
+  'Thu': 'Thursday',
+  'Fri': 'Friday',
+  'Sat': 'Saturday',
+  'Sun': 'Sunday',
+}
+
 function App({ initialProps }: { initialProps: InitialProps }) {
   const db: IDBPDatabase = initialProps.db;
   const [sections, setSections] = useState<Section[]>(initialProps.sections);
@@ -292,6 +317,18 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       .put(newPage);
   }
 
+  function getFormatedDate(date: Date) {
+    let [weekDay, month, day, year] = date.toDateString().split(' ');
+    weekDay = WEEK_MAP[weekDay];
+    month = MONTH_MAP[month];
+
+    let hours = date.getHours() === 12 ? 12 : (date.getHours() % 12);
+    let minutes = date.getMinutes();
+    let meridiem = date.getHours() < 12 ? "AM" : "PM";
+
+    return `${weekDay}, ${month} ${day}, ${year} ${hours}:${minutes} ${meridiem}`
+  }
+
   return (
     <div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
       <header>
@@ -341,7 +378,15 @@ function App({ initialProps }: { initialProps: InitialProps }) {
         </nav>
         <section className="content">
           <div className="title-cont">
-            {selectedPage && <div className="title" id="title" contentEditable={true} onInput={e => updatePageName(e.currentTarget.textContent as string)}>{ }</div>}
+            {selectedPage &&
+              <>
+                <div className="title" id="title" contentEditable={true} onInput={e => updatePageName(e.currentTarget.textContent as string)}>{ }</div>
+                <div className="timestamp">
+                  <div className="date">{getFormatedDate(selectedPage.date)}</div>
+                  <div className="time"></div>
+                </div>
+              </>
+            }
           </div>
           {pageContent && <textarea value={pageContent.content} onChange={e => updatePageContent(e.target.value)}></textarea>}
 
