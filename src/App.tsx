@@ -43,7 +43,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
     getPageContent();
   }, [selectedPage])
-  
+
 
   useEffect(() => {
     if (!selectedPageId || !pages) {
@@ -91,6 +91,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
     // TODO: Make sure client window fits within screen space (use ResizeObserver?)
     setContextMenu({
+      id: crypto.randomUUID(),
       top: e.clientY + 12,
       left: e.clientX,
       items: items as ContextMenuItem[]
@@ -133,9 +134,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
   async function getPageContent() {
     let pageContent: PageContent = await db
-    .transaction('pageContent')
-    .objectStore('pageContent')
-    .get(selectedPageId);
+      .transaction('pageContent')
+      .objectStore('pageContent')
+      .get(selectedPageId);
 
     if (!pageContent) pageContent = {
       id: selectedPageId,
@@ -194,7 +195,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       id: crypto.randomUUID(),
       sectionId: selectedSection.id,
       date: new Date(),
-      name: 'Page ' + (pages.length + 1),
+      name: "",
     }
 
     // Update selected section
@@ -215,6 +216,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
     // Get updated pages
     await getPages()
+
+    setSelectedPageId(newPage.id);
   }
 
   async function deletePage(pageId: string) {
@@ -241,9 +244,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
     // Delete page content
     await db
-    .transaction('pageContent', 'readwrite')
-    .objectStore('pageContent')
-    .delete(pageId);
+      .transaction('pageContent', 'readwrite')
+      .objectStore('pageContent')
+      .delete(pageId);
 
     // Update sections
     await getSections();
@@ -274,15 +277,15 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
     setPageContent(newPageContent);
   }
-  
+
   async function updatePageName(name: string) {
-    const newPage = { ...selectedPage, name} as Page;
+    const newPage = { ...selectedPage, name } as Page;
 
     await db
-    .transaction('pages', 'readwrite')
-    .objectStore('pages')
-    .put(newPage);
-    
+      .transaction('pages', 'readwrite')
+      .objectStore('pages')
+      .put(newPage);
+
     let page = pages?.find(page => page.id === selectedPage?.id);
     if (page) page.name = name;
 
@@ -329,7 +332,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                       icon: "",
                       action: () => { deletePage(page.id) }
                     }])}>
-                    {page.name}
+                    {page.name === "" ? "Untitled Page" : page.name}
                   </li>
                 ))
               }
@@ -339,17 +342,18 @@ function App({ initialProps }: { initialProps: InitialProps }) {
         </nav>
         <section className="content">
           {
-            selectedPage && pageContent && <>
-            <input className="title" type="text" value={selectedPage.name} onChange={(e) => updatePageName(e.target.value)}/>
-            <hr></hr>
-            <textarea value={pageContent.content} onChange={e => updatePageContent(e.target.value)}></textarea>
-            </>
+            selectedPage && pageContent &&
+            <div key={selectedPageId} className="content-cont">
+              <input className="title" type="text" autoFocus={true} value={selectedPage.name} onChange={(e) => updatePageName(e.target.value)} />
+              <hr></hr>
+              <textarea value={pageContent.content} onChange={e => updatePageContent(e.target.value)}></textarea>
+            </div>
           }
         </section>
       </main>
       {
         contextMenu &&
-        <div
+        <div key={contextMenu.id}
           className="context-menu"
           style={{
             top: contextMenu.top + 'px',

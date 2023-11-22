@@ -32,6 +32,11 @@ nav {
 section.content {
   height: 100%;
   width: 100%;
+}
+
+.content-cont {
+  height: 100%;
+  width: 100%;
   display: grid;
   grid-template-rows: auto auto 1fr;
 }
@@ -137,6 +142,16 @@ h5 {
   background-color: white;
   box-shadow: 0.5px 0.5px 4px;
   border-radius: 6px;
+  animation: fade-in .5s forwards;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .context-menu-item {
