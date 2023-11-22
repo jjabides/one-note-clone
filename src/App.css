@@ -25,15 +25,42 @@ nav {
   grid-template-columns: 1fr 1fr;
 }
 
-section.content, section textarea {
-  width: 100%;
+section.content {
   height: 100%;
-  display: block;
+  width: 100%;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
+section hr {
+  width: 100%;
+}
+
+section textarea {
+  height: 100%;
+  width: 100%;
   color: black;
+  display: block;
+}
+
+.content .title {
+  background-color: transparent;
+  border: none;
+  width: 200px;
+  height: 40px;
+  color: black;
+  font-size: 24px;
+  padding: 0px 8px;
+}
+
+input:focus, textarea:focus {
+  outline: none;
 }
 
 textarea {
   background-color: transparent;
+  border: none;
+  padding: 0px 8px;
 }
 
 .sections,
@@ -56,6 +83,10 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
+}
+
+ul li {
+  height: 40px;
 }
 
 .btn {

@@ -211,7 +211,11 @@ function App({ initialProps }: { initialProps: InitialProps }) {
   async function deletePage(pageId: string) {
     if (!selectedSection || !pages) return;
 
-    // Update selected section
+    if (pageId === selectedPageId) {
+      updateDefaultPageId(undefined);
+    }
+
+    // Update selected section page order
     const newPageOrder = selectedSection.pageOrder.filter((id) => id !== pageId);
     const newSelectedSection: Section = { ...selectedSection, pageOrder: newPageOrder }
 
@@ -232,6 +236,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     .objectStore('pageContent')
     .delete(pageId);
 
+    // Update sections
+    await getSections();
 
     // Update pages
     await getPages()
@@ -258,6 +264,18 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     }, 300)
 
     setPageContent(newPageContent);
+  }
+  
+  async function updatePageName(name: string) {
+    const newPage = { ...selectedPage, name} as Page;
+
+    await db
+    .transaction('pages', 'readwrite')
+    .objectStore('pages')
+    .put(newPage);
+
+    // Get updated pages
+    await getPages();
   }
 
   return (
@@ -293,7 +311,12 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                   <li
                     className={`btn pad-8-16 ${page.id === selectedPageId ? 'selected' : ''}`}
                     key={page.id}
-                    onClick={() => updateDefaultPageId(page.id)}>
+                    onClick={() => updateDefaultPageId(page.id)}
+                    onContextMenu={e => onContextMenu(e, [{
+                      name: "Delete",
+                      icon: "",
+                      action: () => { deletePage(page.id) }
+                    }])}>
                     {page.name}
                   </li>
                 ))
@@ -304,7 +327,11 @@ function App({ initialProps }: { initialProps: InitialProps }) {
         </nav>
         <section className="content">
           {
-            pageContent && <textarea value={pageContent.content} onChange={e => updatePageContent(e.target.value)}></textarea>
+            pageContent && <>
+            <input className="title" value={selectedPage?.name} onChange={(e) => updatePageName(e.target.value)}></input>
+            <hr></hr>
+            <textarea value={pageContent.content} onChange={e => updatePageContent(e.target.value)}></textarea>
+            </>
           }
         </section>
       </main>
