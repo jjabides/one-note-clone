@@ -17,7 +17,10 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     return sections.find(section => section.id === selectedSectionId);
   }, [selectedSectionId, sections]);
 
-  const [selectedPage, setSelectedPage] = useState<Page>();
+  const selectedPage = useMemo(() => {
+    if (!selectedPageId || !pages) return undefined;
+    return pages.find(page => page.id === selectedPageId);
+  }, [selectedPageId, pages]);
 
   const [contextMenu, setContextMenu] = useState<ContextMenu>();
   const [modal, setModal] = useState(false);
@@ -43,16 +46,6 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
     getPageContent();
   }, [selectedPage])
-
-
-  useEffect(() => {
-    if (!selectedPageId || !pages) {
-      setSelectedPage(undefined);
-      return;
-    }
-
-    setSelectedPage(pages.find(page => page.id === selectedPageId))
-  }, [selectedPageId, pages])
 
   function updateDefaultSectionId(id?: string) {
     if (!id) {
@@ -281,16 +274,15 @@ function App({ initialProps }: { initialProps: InitialProps }) {
   async function updatePageName(name: string) {
     const newPage = { ...selectedPage, name } as Page;
 
-    await db
-      .transaction('pages', 'readwrite')
-      .objectStore('pages')
-      .put(newPage);
-
     let page = pages?.find(page => page.id === selectedPage?.id);
     if (page) page.name = name;
 
-    setPages(pages);
-    setSelectedPage(newPage);
+    setPages([...pages as Page[]]);
+
+    db
+      .transaction('pages', 'readwrite')
+      .objectStore('pages')
+      .put(newPage);
   }
 
   return (

@@ -142,7 +142,7 @@ h5 {
   background-color: white;
   box-shadow: 0.5px 0.5px 4px;
   border-radius: 6px;
-  animation: fade-in .5s forwards;
+  animation: fade-in .2s forwards;
 }
 
 @keyframes fade-in {
