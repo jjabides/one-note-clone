@@ -318,8 +318,18 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       .put(newPage);
   }
 
-  function updateSectionName(name: string) {
+  async function updateSectionName(section: Section, e: any) {
+    e.preventDefault();
+    
+    section.name = e.target[0].value;
 
+    await db
+      ?.transaction('sections', 'readwrite')
+      .objectStore('sections')
+      .put(section)
+
+    await getSections();
+    setModal(null);
   }
 
   function getFormatedDate(date: Date) {
@@ -344,14 +354,23 @@ function App({ initialProps }: { initialProps: InitialProps }) {
             <h1 className="pad-16">Sections</h1>
             <ul>
               {
-                sections.map(({ id, name }) => (
-                  <li className={`btn pad-8-16 ${id === selectedSectionId ? 'selected' : ''}`} key={id}
-                    onClick={() => updateDefaultSectionId(id)}
+                sections.map((section) => (
+                  <li className={`btn pad-8-16 ${section.id === selectedSectionId ? 'selected' : ''}`} key={section.id}
+                    onClick={() => updateDefaultSectionId(section.id)}
                     onContextMenu={e => onContextMenu(e, [
                       {
                         name: "Rename",
                         icon: "",
-                        action: () => { }
+                        action: () => {
+                          setModal({
+                            title: 'Section Name',
+                            description: 'Enter a section name:',
+                            input: true,
+                            inputValue: section.name,
+                            onSubmit: (e) => updateSectionName(section, e),
+                            onCancel: () => { setModal(null) }
+                          })
+                        }
                       },
                       {
                         name: "Delete",
@@ -360,14 +379,14 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                           setModal({
                             title: 'Permanently Delete Section',
                             description: 'Deleting a section can\'t be undone. Do you want to permanently delete this section and all of its pages?',
-                            onSubmit: () => { deleteSection(id) },
+                            onSubmit: () => { deleteSection(section.id) },
                             onCancel: () => { setModal(null) },
                             confirmBtnTitle: 'Permanently Delete'
                           })
                         }
                       }
                     ])}>
-                    {name}
+                    {section.name}
                   </li>
                 ))
               }

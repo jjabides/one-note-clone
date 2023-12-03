@@ -6,6 +6,7 @@ interface Modal {
     onCancel?: () => void;
     icon?: string;
     input?: boolean;
+    inputValue?: string;
     confirmBtnTitle?: string;
     cancelBtnTitle?: string;
 }
