@@ -192,12 +192,10 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     await getSections();
   }
 
-  async function addSection(e: any) {
-    e.preventDefault();
-
+  async function addSection(name: string) {
     const newSection: Section = {
       id: crypto.randomUUID(),
-      name: e.target[0].value,
+      name: name,
       pageOrder: [],
       date: new Date(),
     }
@@ -278,7 +276,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     await getSections();
 
     // Update pages
-    await getPages()
+    await getPages();
+
+    setModal(null);
   }
 
   let updatePageContentTimer: any;
@@ -367,7 +367,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                             description: 'Enter a section name:',
                             input: true,
                             inputValue: section.name,
-                            onSubmit: (e) => updateSectionName(section, e),
+                            onSubmit: (value) => updateSectionName(section, value),
                             onCancel: () => { setModal(null) }
                           })
                         }
@@ -414,7 +414,15 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                     onContextMenu={e => onContextMenu(e, [{
                       name: "Delete",
                       icon: "",
-                      action: () => { deletePage(page.id) }
+                      action: () => { 
+                        setModal({
+                          title: 'Delete Page?',
+                          description: 'Are you sure you want to delete this page?',
+                          onSubmit: () => { deletePage(page.id) },
+                          onCancel: () => { setModal(null) },
+                          confirmBtnTitle: 'Delete'
+                        })
+                      }
                     }])}>
                     {page.name === "" ? "Untitled Page" : page.name}
                   </li>

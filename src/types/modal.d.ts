@@ -2,7 +2,7 @@
 interface Modal {
     title: string,
     description: string;
-    onSubmit: (e: any) => void;
+    onSubmit: (value: string) => void;
     onCancel?: () => void;
     icon?: string;
     input?: boolean;
