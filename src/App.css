@@ -16,6 +16,7 @@ main {
   width: 100%;
   display: grid;
   grid-template-columns: auto 1fr;
+  overflow: hidden;
 }
 
 nav {
@@ -23,6 +24,7 @@ nav {
   width: 512px;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  overflow: hidden;
 }
 
 .sections, .pages {
@@ -71,6 +73,7 @@ textarea {
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  overflow: hidden;
 }
 
 .sections {
@@ -85,6 +88,10 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-block: unset;
+  padding-inline: unset;
 }
 
 ul li {

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import { IDBPDatabase } from 'idb';
+import Modal from './components/modal';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -48,7 +49,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
   }, [selectedPageId, pages]);
 
   const [contextMenu, setContextMenu] = useState<ContextMenu>();
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState<Modal | null>();
 
   const [pageContent, setPageContent] = useState<PageContent>();
 
@@ -210,7 +211,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       .add(newSection)
 
     await getSections();
-    setModal(false);
+    setModal(null);
   }
 
   async function addPage() {
@@ -317,13 +318,17 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       .put(newPage);
   }
 
+  function updateSectionName(name: string) {
+
+  }
+
   function getFormatedDate(date: Date) {
     let [weekDay, month, day, year] = date.toDateString().split(' ');
     weekDay = WEEK_MAP[weekDay];
     month = MONTH_MAP[month];
 
     let hours = date.getHours() === 12 ? 12 : (date.getHours() % 12);
-    let minutes = date.getMinutes();
+    let minutes = (date.getMinutes() + "").padStart(2, "0");
     let meridiem = date.getHours() < 12 ? "AM" : "PM";
 
     return `${weekDay}, ${month} ${day}, ${year} ${hours}:${minutes} ${meridiem}`
@@ -342,17 +347,37 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                 sections.map(({ id, name }) => (
                   <li className={`btn pad-8-16 ${id === selectedSectionId ? 'selected' : ''}`} key={id}
                     onClick={() => updateDefaultSectionId(id)}
-                    onContextMenu={e => onContextMenu(e, [{
-                      name: "Delete",
-                      icon: "",
-                      action: () => { deleteSection(id) }
-                    }])}>
+                    onContextMenu={e => onContextMenu(e, [
+                      {
+                        name: "Rename",
+                        icon: "",
+                        action: () => { }
+                      },
+                      {
+                        name: "Delete",
+                        icon: "",
+                        action: () => {
+                          setModal({
+                            title: 'Permanently Delete Section',
+                            description: 'Deleting a section can\'t be undone. Do you want to permanently delete this section and all of its pages?',
+                            onSubmit: () => { deleteSection(id) }
+                          })
+                        }
+                      }
+                    ])}>
                     {name}
                   </li>
                 ))
               }
             </ul>
-            <div className="btn pad-12-16" onClick={() => setModal(true)}>Add Section</div>
+            <div
+              className="btn pad-12-16"
+              onClick={() => setModal(
+                {
+                  title: 'Add Section',
+                  description: 'Enter a Section Name',
+                  onSubmit: addSection,
+                })}>Add Section</div>
           </div>
           <div className="pages">
             <h1 className="pad-16">Pages</h1>
@@ -419,14 +444,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       {
         modal && (
           <>
-            <div className="overlay" onClick={() => setModal(false)}></div>
-            <div className="add-section-modal modal pad-16">
-              <h2 className="title">Add Section</h2>
-              <form onSubmit={addSection}>
-                <div className="description">Enter a Section Name:</div>
-                <input type="text" />
-              </form>
-            </div>
+            <div className="overlay" onClick={() => setModal(null)}></div>
+            <Modal {...modal}></Modal>
           </>
         )
       }
