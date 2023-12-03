@@ -360,7 +360,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                           setModal({
                             title: 'Permanently Delete Section',
                             description: 'Deleting a section can\'t be undone. Do you want to permanently delete this section and all of its pages?',
-                            onSubmit: () => { deleteSection(id) }
+                            onSubmit: () => { deleteSection(id) },
+                            onCancel: () => { setModal(null) },
+                            confirmBtnTitle: 'Permanently Delete'
                           })
                         }
                       }
@@ -376,6 +378,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                 {
                   title: 'Add Section',
                   description: 'Enter a Section Name',
+                  input: true,
+                  onCancel: () => { setModal(null) },
                   onSubmit: addSection,
                 })}>Add Section</div>
           </div>
