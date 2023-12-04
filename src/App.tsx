@@ -36,7 +36,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
   const [sections, setSections] = useState<Section[]>(initialProps.sections);
   const [pages, setPages] = useState<Page[]>();
   const [selectedSectionId, setSelectedSectionId] = useState<string>(initialProps.defaultSectionId);
-  let [selectedPageId, setSelectedPageId] = useState<string>(initialProps.defaultPageId)
+  const [selectedPageId, setSelectedPageId] = useState<string>(initialProps.defaultPageId);
+  const [mouseDown, setMouseDown] = useState(false);
 
   const selectedSection = useMemo(() => {
     if (!selectedSectionId || !sections) return undefined;
@@ -52,6 +53,13 @@ function App({ initialProps }: { initialProps: InitialProps }) {
   const [modal, setModal] = useState<Modal | null>();
 
   const [pageContent, setPageContent] = useState<PageContent>();
+
+  // variables for dragging state
+  const [draggedItem, setDraggedItem] = useState<Section | null>();
+  const [mousePosition, setMousePosition] = useState<number>(0);
+  const [oldIndex, setOldIndex] = useState<number | null>(null);
+  const [newIndex, setNewIndex] = useState<number | null>(null);
+  const [draggedItemOffset, setDraggedItemOffset] = useState<number>(0);
 
   // Update pages when selectedSection changes 
   useEffect(() => {
@@ -100,10 +108,6 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     setSelectedPageId(id as string);
   }
 
-  function updateSectionOrder() {
-    localStorage.setItem('sectionOrder', JSON.stringify(sections.map((section) => section.id)));
-  }
-
   function onContextMenu(e: any, items?: ContextMenuItem[]) {
     e.preventDefault();
     e.stopPropagation();
@@ -112,8 +116,6 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       setContextMenu(undefined)
       return;
     }
-
-    selectedPageId = "";
 
     // TODO: Make sure client window fits within screen space (use ResizeObserver?)
     setContextMenu({
@@ -318,10 +320,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       .put(newPage);
   }
 
-  async function updateSectionName(section: Section, e: any) {
-    e.preventDefault();
-    
-    section.name = e.target[0].value;
+  async function updateSectionName(section: Section, value: string) {
+    section.name = value;
 
     await db
       ?.transaction('sections', 'readwrite')
@@ -344,19 +344,89 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     return `${weekDay}, ${month} ${day}, ${year} ${hours}:${minutes} ${meridiem}`
   }
 
+  function onMouseMoveSection(e: any) {
+    if (!draggedItem) return;
+    e.preventDefault();
+
+    const y = e.clientY - 150 - draggedItemOffset;
+    let index = y / 40;
+    if (index < 0) index = 0;
+    if (index > sections.length - 1) index = sections.length - 1;
+
+    setNewIndex(Math.round(index));
+    setMousePosition(y);
+  }
+
+  function getTransform(index: number) {
+    if (oldIndex === null || newIndex === null) return null;
+    if (index === oldIndex) {
+      return {
+        visibility: 'hidden'
+      }
+    }
+    if (index > oldIndex && newIndex >= index) {
+      return {
+        transform: 'translateY(-40px)'
+      }
+    }
+    if (index < oldIndex && newIndex <= index) {
+      return {
+        transform: 'translateY(40px)'
+      }
+    }
+  }
+
+  function updateSectionOrder() {
+    if (newIndex === null || oldIndex === null || newIndex === oldIndex) return;
+    
+    let newSections = [...sections];
+    if (newIndex < oldIndex) {
+      for (let i = oldIndex; i > newIndex; i--) {
+        let swap = newSections[i];
+        newSections[i] = newSections[i - 1];
+        newSections[i - 1] = swap;
+      }
+    } else {
+      for (let i = oldIndex; i < newIndex; i++) {
+        let swap = newSections[i];
+        newSections[i] = newSections[i + 1];
+        newSections[i + 1] = swap;
+      }
+    }
+
+    localStorage.setItem('sectionOrder', JSON.stringify(newSections.map(section => section.id)));
+    setSections(newSections);
+  }
+
+  function onAppMouseUp() {
+    updateSectionOrder();
+    setDraggedItem(null);
+    setDraggedItemOffset(0);
+    setMousePosition(0);
+    setNewIndex(null);
+  }
+
   return (
-    <div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
+    <div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)} onMouseUp={onAppMouseUp}>
       <header>
       </header>
       <main>
         <nav>
           <div className="sections">
             <h1 className="pad-16">Sections</h1>
-            <ul>
+            <ul onMouseMove={onMouseMoveSection}>
               {
-                sections.map((section) => (
+                sections.map((section, index) => (
                   <li className={`btn pad-8-16 ${section.id === selectedSectionId ? 'selected' : ''}`} key={section.id}
-                    onClick={() => updateDefaultSectionId(section.id)}
+                    onClick={() => {
+                      updateDefaultSectionId(section.id);
+                    }}
+                    onMouseDown={(e) => {
+                      setDraggedItemOffset(e.nativeEvent.offsetY);
+                      setDraggedItem(section);
+                      setOldIndex(index);
+                      setNewIndex(index);
+                    }}
                     onContextMenu={e => onContextMenu(e, [
                       {
                         name: "Rename",
@@ -385,10 +455,17 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                           })
                         }
                       }
-                    ])}>
+                    ])}
+                    style={getTransform(index)}>
                     {section.name}
                   </li>
                 ))
+              }
+              {
+                draggedItem && mousePosition &&
+                <div className="dragged-item pad-8-16" style={{ top: mousePosition + 'px' }}>
+                  {draggedItem.name}
+                </div>
               }
             </ul>
             <div
@@ -414,7 +491,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                     onContextMenu={e => onContextMenu(e, [{
                       name: "Delete",
                       icon: "",
-                      action: () => { 
+                      action: () => {
                         setModal({
                           title: 'Delete Page?',
                           description: 'Are you sure you want to delete this page?',
