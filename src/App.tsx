@@ -358,10 +358,11 @@ function App({ initialProps }: { initialProps: InitialProps }) {
   }
 
   function getSectionStyle(index: number) {
-    if (oldIndex === null || newIndex === null) return null;
+    if (oldIndex === null || newIndex === null || !draggedItem) return null;
 
     let baseStyle = {
-      pointerEvents: draggedItem && mousePosition !== null ? 'none' : 'auto'
+      pointerEvents: draggedItem && mousePosition !== null ? 'none' : 'auto',
+      transition: 'background-color .2s, transform .2s'
     }
 
     if (index === oldIndex && mousePosition !== null) {
