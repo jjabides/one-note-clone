@@ -176,13 +176,30 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 			updateDefaultSectionId(undefined);
 		}
 
+		const sectionToDelete = sections.find(section => section.id === id) as Section;
+
+		// Update sectionOrder
 		const ids = [...sections.filter(section => section.id !== id).map(section => section.id)];
 		localStorage.setItem('sectionOrder', JSON.stringify(ids));
 
+		// Delete section
 		await db
 			?.transaction('sections', 'readwrite')
 			.objectStore('sections')
 			.delete(id);
+
+		// Delete section pages and page content
+		for (let pageId of sectionToDelete.pageOrder) {
+			db
+				?.transaction('pages', 'readwrite')
+				.objectStore('pages')
+				.delete(pageId);
+
+			db
+				?.transaction('pageContent', 'readwrite')
+				.objectStore('pageContent')
+				.delete(pageId);
+		}
 
 		await getSections();
 		setModal(null);
@@ -348,9 +365,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		selectedSection.pageOrder = items.map(item => item.id);
 
 		db
-		.transaction('sections', 'readwrite')
-		.objectStore('sections')
-		.put(selectedSection);
+			.transaction('sections', 'readwrite')
+			.objectStore('sections')
+			.put(selectedSection);
 
 		setPages([...items as Page[]])
 	}
