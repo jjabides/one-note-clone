@@ -55,7 +55,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
   // variables for dragging state
   const [draggedItem, setDraggedItem] = useState<Section | null>(null);
-  const [mousePosition, setMousePosition] = useState<number>();
+  const [mousePosition, setMousePosition] = useState<number | null>(null);
   const [oldIndex, setOldIndex] = useState<number | null>(null);
   const [newIndex, setNewIndex] = useState<number | null>(null);
   const [draggedItemOffset, setDraggedItemOffset] = useState<number>(0);
@@ -361,10 +361,10 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     if (oldIndex === null || newIndex === null) return null;
 
     let baseStyle = {
-      pointerEvents: draggedItem && mousePosition ? 'none' : 'auto'
+      pointerEvents: draggedItem && mousePosition !== null ? 'none' : 'auto'
     }
 
-    if (index === oldIndex && mousePosition) {
+    if (index === oldIndex && mousePosition !== null) {
       return {
         ...baseStyle,
         visibility: 'hidden',
@@ -413,7 +413,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     updateSectionOrder();
     setDraggedItemOffset(0);
     setDraggedItem(null);
-    setMousePosition(0);
+    setMousePosition(null);
     setNewIndex(null);
   }
 
@@ -475,7 +475,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                 ))
               }
               {
-                (draggedItem && mousePosition) ?
+                (draggedItem && mousePosition !== null) ?
                 <div className="dragged-item pad-8-16" style={{ top: mousePosition + 'px' }}>
                   {draggedItem.name}
                 </div> : ""
