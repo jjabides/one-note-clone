@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { IDBPDatabase, openDB } from 'idb';
-import "./initialization-layer.css";
+import "./styles/initialization-layer.css";
 import App from "./App";
 
 export default function InitializationLayer() {

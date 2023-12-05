@@ -27,12 +27,8 @@ nav {
   overflow: hidden;
 }
 
-.sections, .pages {
+.pages {
   width: 100%;
-}
-
-.sections ul {
-  position: relative;
 }
 
 section.content {
@@ -71,17 +67,12 @@ textarea {
   padding: 0px 8px;
 }
 
-.sections,
 .pages {
   width: 100%;
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr auto;
   overflow: hidden;
-}
-
-.sections {
-  background-color: rgb(255, 228, 192);
 }
 
 .pages {
