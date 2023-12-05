@@ -64,7 +64,7 @@ export default function NavGroup({ title, items, selectedItemId, updateSelectedI
 
         let baseStyle = {
             pointerEvents: draggedItem && mousePosition !== null ? 'none' : 'auto',
-            transition: 'background-color .2s, transform .2s'
+            transition: 'background-color .2s, transform .3s'
         }
 
         if (index === oldIndex && mousePosition !== null) {
@@ -107,7 +107,7 @@ export default function NavGroup({ title, items, selectedItemId, updateSelectedI
             {
                 (draggedItem && mousePosition !== null) ?
                     <div className="dragged-item pad-8-16" style={{ top: mousePosition + 'px' }}>
-                        {draggedItem.name}
+                        {draggedItem.name ? draggedItem.name : placeHolderItemTitle }
                     </div> : ""
             }
         </ul>

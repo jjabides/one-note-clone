@@ -344,7 +344,15 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 	}
 
 	function updatePageOrder(items: NavGroupItem[]) {
+		if (!selectedSection) return;
+		selectedSection.pageOrder = items.map(item => item.id);
 
+		db
+		.transaction('sections', 'readwrite')
+		.objectStore('sections')
+		.put(selectedSection);
+
+		setPages([...items as Page[]])
 	}
 
 	return (
