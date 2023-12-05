@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../styles/NavGroup.css";
 
-export default function NavGroup({ title, items, selectedItemId, updateSelectedItemId, onContextMenu, addItemButton, onUpdateOrder }: NavGroup) {
+export default function NavGroup({ title, items, selectedItemId, updateSelectedItemId, onContextMenu, addItemButton, onUpdateOrder, backgroundColor, placeHolderItemTitle }: NavGroup) {
     // variables for dragging state
     const [draggedItem, setDraggedItem] = useState<NavGroupItem | null>(null);
     const [mousePosition, setMousePosition] = useState<number | null>(null);
@@ -25,7 +25,7 @@ export default function NavGroup({ title, items, selectedItemId, updateSelectedI
 	}
 
     function onMouseMove(e: any) {
-        if (!draggedItem) return;
+        if (!draggedItem || !items) return;
         e.preventDefault();
 
         const offsetTop = 150;
@@ -39,7 +39,7 @@ export default function NavGroup({ title, items, selectedItemId, updateSelectedI
     }
 
     function updateOrder() {
-		if (newIndex === null || oldIndex === null || newIndex === oldIndex) return;
+		if (newIndex === null || oldIndex === null || newIndex === oldIndex || !items) return;
 
 		let newItems = [...items];
 		if (newIndex < oldIndex) {
@@ -90,17 +90,17 @@ export default function NavGroup({ title, items, selectedItemId, updateSelectedI
         return baseStyle;
     }
 
-    return <div className="nav-group" onMouseUp={onMouseUp}>
+    return <div className="nav-group" onMouseUp={onMouseUp} style={{ backgroundColor }}>
         <h1 className="pad-16">{title}</h1>
         <ul onMouseMove={onMouseMove}>
             {
-                items.map((item, index) => (
+                items && items.map((item, index) => (
                     <li className={`btn pad-8-16 ${item.id === selectedItemId ? 'selected' : ''}`} key={item.id}
                         onClick={() => updateSelectedItemId(item.id)}
                         onMouseDown={(e) => onMouseDown(e, item, index)}
                         onContextMenu={e => onContextMenu(e, item)}
                         style={getSectionStyle(index) as any}>
-                        {item.name}
+                        {item.name ? item.name : placeHolderItemTitle }
                     </li>
                 ))
             }

@@ -338,6 +338,15 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		return `${weekDay}, ${month} ${day}, ${year} ${hours}:${minutes} ${meridiem}`
 	}
 
+	function updateSectionOrder(items: NavGroupItem[]) {
+		localStorage.setItem('sectionOrder', JSON.stringify(items.map(section => section.id)));
+		setSections(items as Section[]);
+	}
+
+	function updatePageOrder(items: NavGroupItem[]) {
+
+	}
+
 	return (
 		<div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
 			<header>
@@ -389,40 +398,34 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 									onSubmit: addSection,
 								})
 						}}
-						onUpdateOrder={(items) => {
-							localStorage.setItem('sectionOrder', JSON.stringify(items.map(section => section.id)));
-							setSections(items as Section[]);
-						}}
+						onUpdateOrder={updateSectionOrder}
+						backgroundColor={'rgb(255, 228, 192)'}
 					></NavGroup>
-					<div className="pages">
-						<h1 className="pad-16">Pages</h1>
-						<ul>
-							{
-								pages && pages.map((page) => (
-									<li
-										className={`btn pad-8-16 ${page.id === selectedPageId ? 'selected' : ''}`}
-										key={page.id}
-										onClick={() => updateDefaultPageId(page.id)}
-										onContextMenu={e => onContextMenu(e, [{
-											name: "Delete",
-											icon: "",
-											action: () => {
-												setModal({
-													title: 'Delete Page?',
-													description: 'Are you sure you want to delete this page?',
-													onSubmit: () => { deletePage(page.id) },
-													onCancel: () => { setModal(null) },
-													confirmBtnTitle: 'Delete'
-												})
-											}
-										}])}>
-										{page.name === "" ? "Untitled Page" : page.name}
-									</li>
-								))
+					<NavGroup
+						title={'Pages'}
+						selectedItemId={selectedPageId}
+						updateSelectedItemId={updateDefaultPageId}
+						items={pages}
+						onContextMenu={(e, item) => onContextMenu(e, [{
+							name: "Delete",
+							icon: "",
+							action: () => {
+								setModal({
+									title: 'Delete Page?',
+									description: 'Are you sure you want to delete this page?',
+									onSubmit: () => { deletePage(item.id) },
+									onCancel: () => { setModal(null) },
+									confirmBtnTitle: 'Delete'
+								})
 							}
-						</ul>
-						<div className="btn add-page pad-12-16" onClick={addPage}>Add Page</div>
-					</div>
+						}])}
+						addItemButton={{
+							title: 'Add Page',
+							onClick: addPage
+						}}
+						onUpdateOrder={updatePageOrder}
+						backgroundColor={'rgb(255, 205, 141)'}
+						placeHolderItemTitle='Untitled Page'></NavGroup>
 				</nav>
 				<section className="content">
 					<div className="title-cont">

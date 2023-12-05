@@ -4,8 +4,6 @@
     display: grid;
     grid-template-rows: auto 1fr auto;
     overflow: hidden;
-
-    background-color: rgb(255, 228, 192);
 }
 
 .nav-group ul {
