@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import { IDBPDatabase } from 'idb';
-import Modal from './components/modal';
+import Modal from './components/Modal';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -37,7 +37,6 @@ function App({ initialProps }: { initialProps: InitialProps }) {
   const [pages, setPages] = useState<Page[]>();
   const [selectedSectionId, setSelectedSectionId] = useState<string>(initialProps.defaultSectionId);
   const [selectedPageId, setSelectedPageId] = useState<string>(initialProps.defaultPageId);
-  const [mouseDown, setMouseDown] = useState(false);
 
   const selectedSection = useMemo(() => {
     if (!selectedSectionId || !sections) return undefined;
@@ -55,8 +54,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
   const [pageContent, setPageContent] = useState<PageContent>();
 
   // variables for dragging state
-  const [draggedItem, setDraggedItem] = useState<Section | null>();
-  const [mousePosition, setMousePosition] = useState<number>(0);
+  const [draggedItem, setDraggedItem] = useState<Section | null>(null);
+  const [mousePosition, setMousePosition] = useState<number>();
   const [oldIndex, setOldIndex] = useState<number | null>(null);
   const [newIndex, setNewIndex] = useState<number | null>(null);
   const [draggedItemOffset, setDraggedItemOffset] = useState<number>(0);
@@ -357,13 +356,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
     setMousePosition(y);
   }
 
-  function getTransform(index: number) {
+  function getSectionStyle(index: number) {
     if (oldIndex === null || newIndex === null) return null;
-    if (index === oldIndex) {
-      return {
-        visibility: 'hidden'
-      }
-    }
     if (index > oldIndex && newIndex >= index) {
       return {
         transform: 'translateY(-40px)'
@@ -378,7 +372,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
   function updateSectionOrder() {
     if (newIndex === null || oldIndex === null || newIndex === oldIndex) return;
-    
+
     let newSections = [...sections];
     if (newIndex < oldIndex) {
       for (let i = oldIndex; i > newIndex; i--) {
@@ -400,10 +394,17 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
   function onAppMouseUp() {
     updateSectionOrder();
-    setDraggedItem(null);
     setDraggedItemOffset(0);
+    setDraggedItem(null);
     setMousePosition(0);
     setNewIndex(null);
+  }
+
+  function onSectionMouseDown(e: any, section: Section, index: number) {
+    setDraggedItemOffset(e.nativeEvent.offsetY);
+    setDraggedItem(section);
+    setOldIndex(index);
+    setNewIndex(index);
   }
 
   return (
@@ -421,12 +422,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                     onClick={() => {
                       updateDefaultSectionId(section.id);
                     }}
-                    onMouseDown={(e) => {
-                      setDraggedItemOffset(e.nativeEvent.offsetY);
-                      setDraggedItem(section);
-                      setOldIndex(index);
-                      setNewIndex(index);
-                    }}
+                    onMouseDown={(e) => onSectionMouseDown(e, section, index)}
                     onContextMenu={e => onContextMenu(e, [
                       {
                         name: "Rename",
@@ -456,16 +452,16 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                         }
                       }
                     ])}
-                    style={getTransform(index)}>
+                    style={{ visibility: draggedItem && mousePosition && oldIndex === index ? 'hidden' : 'visible', ...getSectionStyle(index) }}>
                     {section.name}
                   </li>
                 ))
               }
               {
-                draggedItem && mousePosition &&
+                (draggedItem && mousePosition) ?
                 <div className="dragged-item pad-8-16" style={{ top: mousePosition + 'px' }}>
                   {draggedItem.name}
-                </div>
+                </div> : ""
               }
             </ul>
             <div
