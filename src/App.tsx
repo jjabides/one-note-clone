@@ -191,6 +191,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
       .delete(id);
 
     await getSections();
+    setModal(null);
   }
 
   async function addSection(name: string) {
@@ -358,16 +359,32 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
   function getSectionStyle(index: number) {
     if (oldIndex === null || newIndex === null) return null;
+
+    let baseStyle = {
+      pointerEvents: draggedItem && mousePosition ? 'none' : 'auto'
+    }
+
+    if (index === oldIndex && mousePosition) {
+      return {
+        ...baseStyle,
+        visibility: 'hidden',
+      }
+    }
+
     if (index > oldIndex && newIndex >= index) {
       return {
-        transform: 'translateY(-40px)'
+        ...baseStyle,
+        transform: 'translateY(-40px)',        
       }
     }
     if (index < oldIndex && newIndex <= index) {
       return {
+        ...baseStyle,
         transform: 'translateY(40px)'
       }
     }
+
+    return baseStyle;
   }
 
   function updateSectionOrder() {
@@ -452,7 +469,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
                         }
                       }
                     ])}
-                    style={{ visibility: draggedItem && mousePosition && oldIndex === index ? 'hidden' : 'visible', ...getSectionStyle(index) }}>
+                    style={getSectionStyle(index) as any}>
                     {section.name}
                   </li>
                 ))
