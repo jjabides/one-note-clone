@@ -3,6 +3,7 @@ import './styles/App.css'
 import { IDBPDatabase } from 'idb';
 import Modal from './components/Modal';
 import NavGroup from './components/NavGroup';
+import FontDropdown from './components/FontDropdown';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -387,7 +388,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						<div className="view tab">View</div>
 					</div>
 					<div className="tools">
-						
+						<FontDropdown></FontDropdown>
 					</div>
 				</div>
 			</header>

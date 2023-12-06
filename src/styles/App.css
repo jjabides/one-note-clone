@@ -205,11 +205,76 @@ h5 {
 
 .ribbon .tools {
   width: calc(100% - 16px);
-  height: 40px;
+  height: 42px;
   border-radius: 6px;
   background-color: white;
   box-shadow: 0px 1px 2px 1px rgba(0,0,0,0.2);
   position: absolute;
   top: 36px;
   left: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0px 8px;
+}
+
+.tools .font-dropdown {
+  display: flex;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  width: 128px;
+  height: 32px;
+  font-size: 14px;
+  align-items: center;
+  border-radius: 4px;
+  position: relative;
+}
+
+.font-dropdown .dropdown-value {
+  width: 100%;
+  padding-left: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.font-dropdown .dropdown-btn {
+  width: 20px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 3px;
+}
+
+.font-dropdown .dropdown-btn img {
+  width: 100%;
+  rotate: 180deg;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 32px;
+  z-index: 1;
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: 1px 1px 4px 1px rgba(0, 0, 0, 0.2);
+  animation: fade-down .2s forwards;
+}
+
+@keyframes fade-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+.dropdown-list li {
+  height: 32px;
+  padding-left: 8px;
+  display: flex;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-items: center;
 }
