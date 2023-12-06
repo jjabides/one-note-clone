@@ -375,6 +375,21 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 	return (
 		<div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
 			<header>
+				<div className="header">
+
+				</div>
+				<div className="ribbon">
+					<div className="tabs">
+						<div className="file tab">File</div>
+						<div className="home tab">Home</div>
+						<div className="insert tab">Insert</div>
+						<div className="draw tab">Draw</div>
+						<div className="view tab">View</div>
+					</div>
+					<div className="tools">
+						
+					</div>
+				</div>
 			</header>
 			<main>
 				<nav>

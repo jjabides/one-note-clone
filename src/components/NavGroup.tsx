@@ -28,7 +28,7 @@ export default function NavGroup({ title, items, selectedItemId, updateSelectedI
         if (!draggedItem || !items) return;
         e.preventDefault();
 
-        const offsetTop = 150;
+        const offsetTop = 190; // Offset from top of screen to ul
         const y = e.clientY - offsetTop - draggedItemOffset;
         let index = y / 40;
         if (index < 0) index = 0;
