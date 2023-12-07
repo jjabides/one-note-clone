@@ -215,6 +215,7 @@ h5 {
   display: flex;
   align-items: center;
   padding: 0px 8px;
+  gap: 8px;
 }
 
 .tools .dropdown {
@@ -287,4 +288,8 @@ h5 {
 
 .page-content p {
   margin: 0;
+}
+
+.tools span {
+  display: flex;
 }

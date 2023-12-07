@@ -6,6 +6,9 @@ import NavGroup from './components/NavGroup';
 import { Editor, } from '@tinymce/tinymce-react';
 import { Editor as TinyMCEEditor } from "tinymce";
 import Dropdown from './components/Dropdown';
+import Bold from "./images/Bold.svg";
+import Italic from "./images/Italic.svg";
+import ToggleButton from './components/ToggleButton';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -87,7 +90,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
 	const [fontFamily, setFontFamily] = useState<string>('Calibri');
 	const [fontSize, setFontSize] = useState<string>('11px')
-	const editorRef = useRef<TinyMCEEditor>()
+	const [bold, setBold] = useState<boolean>(false);
+	const [italic, setItalic] = useState<boolean>(false);
+	const editorRef = useRef<TinyMCEEditor>();
 
 	// Update pages when selectedSection changes 
 	useEffect(() => {
@@ -428,6 +433,18 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		setFontSize(value);
 	}
 
+	function updateBold() {
+		if (!editorRef.current) return;
+		editorRef.current.execCommand('Bold');
+		setBold(!bold);
+	}
+
+	function updateItalic() {
+		if (!editorRef.current) return;
+		editorRef.current.execCommand('Italic');
+		setItalic(!italic);
+	}
+
 	return (
 		<div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
 			<header>
@@ -443,20 +460,36 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						<div className="view tab">View</div>
 					</div>
 					<div className="tools">
-						<Dropdown
-							selectedOption={fontFamily}
-							setSelectedOption={updateFontFamily}
-							width={128}
-							options={fonts}
-							borderRadius='4px 0px 0px 4px'></Dropdown>
-						<Dropdown
-							options={fontSizes}
-							setSelectedOption={updateFontSize}
-							selectedOption={fontSize}
-							width={64}
-							borderWidth='1px 1px 1px 0px'
-							borderRadius='0px 4px 4px 0px'
-						></Dropdown>
+						<span>
+							<Dropdown
+								selectedOption={fontFamily}
+								setSelectedOption={updateFontFamily}
+								width={128}
+								options={fonts}
+								borderRadius='4px 0px 0px 4px'></Dropdown>
+							<Dropdown
+								options={fontSizes}
+								setSelectedOption={updateFontSize}
+								selectedOption={fontSize}
+								width={64}
+								borderWidth='1px 1px 1px 0px'
+								borderRadius='0px 4px 4px 0px'
+							></Dropdown>
+						</span>
+						<span>
+							<ToggleButton
+								icon={Bold}
+								onClick={updateBold}
+								active={bold}
+								iconSize={16}
+							></ToggleButton>
+							<ToggleButton
+								icon={Italic}
+								onClick={updateItalic}
+								active={italic}
+								iconSize={16}
+							></ToggleButton>
+						</span>
 					</div>
 				</div>
 			</header>
@@ -557,8 +590,12 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 							onSelectionChange={(e, editor) => {
 								const fontName = editor.queryCommandValue('FontName');
 								const fontSize = editor.queryCommandValue('FontSize');
+								const bold = editor.queryCommandState('Bold');
+
 								setFontFamily(fontName)
 								setFontSize(fontSize)
+								setBold(bold)
+								setItalic(editor.queryCommandState('Italic'))
 							}}
 							onInit={(evt, editor) => {
 								editorRef.current = editor
