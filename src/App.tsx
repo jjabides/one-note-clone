@@ -8,6 +8,7 @@ import { Editor as TinyMCEEditor } from "tinymce";
 import Dropdown from './components/Dropdown';
 import Bold from "./images/Bold.svg";
 import Italic from "./images/Italic.svg";
+import Underline from "./images/Underline.svg";
 import ToggleButton from './components/ToggleButton';
 
 const CONTEXT_MENU_WIDTH = 200;
@@ -92,6 +93,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 	const [fontSize, setFontSize] = useState<string>('11px')
 	const [bold, setBold] = useState<boolean>(false);
 	const [italic, setItalic] = useState<boolean>(false);
+	const [underline, setUnderline] = useState<boolean>(false);
 	const editorRef = useRef<TinyMCEEditor>();
 
 	// Update pages when selectedSection changes 
@@ -445,6 +447,12 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		setItalic(!italic);
 	}
 
+	function updateUnderline() {
+		if (!editorRef.current) return;
+		editorRef.current.execCommand('Underline');
+		setUnderline(!underline);
+	}
+
 	return (
 		<div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
 			<header>
@@ -487,6 +495,12 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 								icon={Italic}
 								onClick={updateItalic}
 								active={italic}
+								iconSize={16}
+							></ToggleButton>
+							<ToggleButton
+								icon={Underline}
+								onClick={updateUnderline}
+								active={underline}
 								iconSize={16}
 							></ToggleButton>
 						</span>
@@ -596,6 +610,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 								setFontSize(fontSize)
 								setBold(bold)
 								setItalic(editor.queryCommandState('Italic'))
+								setUnderline(editor.queryCommandState('Underline'))
 							}}
 							onInit={(evt, editor) => {
 								editorRef.current = editor
