@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import Arrow_No_Tail from "../images/Arrow_No_Tail.svg";
 
 const options = [
-    'Calibri',
     'Arial',
+    'Calibri',
     'Comic Sans MS',
     'Consolas',
     'Corbel',
@@ -15,9 +15,8 @@ const options = [
     'Verdana',
 ];
 
-export default function FontDropdown() {
+export default function FontDropdown({ fontFamily, setFontFamily }: { fontFamily: string, setFontFamily: (value: string) => void }) {
     const [open, setOpen] = useState<boolean>(false);
-    const [value, setValue] = useState<string>('Calibri');
     const dropdownEl = useRef<HTMLElement>()
 
     useEffect(() => {
@@ -45,13 +44,13 @@ export default function FontDropdown() {
 
 
     function selectOption(option: string) {
-        setValue(option);
+        setFontFamily(option);
         setOpen(false);
     }
 
     return <>
         <div className="font-dropdown" ref={dropdownEl as any}>
-            <div className="dropdown-value">{value}</div>
+            <div className="dropdown-value">{fontFamily}</div>
             <div className={`dropdown-btn btn ${open ? 'selected' : ''}`} onClick={() => setOpen(!open)}>
                 <img src={Arrow_No_Tail} />
             </div>

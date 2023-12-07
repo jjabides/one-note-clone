@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 import './styles/App.css'
 import { IDBPDatabase } from 'idb';
 import Modal from './components/Modal';
 import NavGroup from './components/NavGroup';
 import FontDropdown from './components/FontDropdown';
+import { Editor, } from '@tinymce/tinymce-react';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -54,6 +55,10 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 	const [modal, setModal] = useState<Modal | null>();
 
 	const [pageContent, setPageContent] = useState<PageContent>();
+	const [initialPageContent, setInitalPageContent] = useState<string>();
+
+	const [fontFamily, setFontFamily] = useState<string>('Calibri');
+	const editorRef = useRef()
 
 	// Update pages when selectedSection changes 
 	useEffect(() => {
@@ -75,13 +80,19 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		getPageContent();
 
 		// Preset title value
-		const titleEl = document.getElementById('title')
+		const titleEl = document.getElementById('title');
 		if (titleEl) {
 			titleEl.textContent = selectedPage.name;
 			titleEl.focus()
 		}
 	}, [selectedPage]);
 
+	useEffect(() => {
+		if (!fontFamily || pageContent === undefined || !editorRef.current) return;
+
+		(editorRef.current as any).execCommand('FontName', false, fontFamily);
+	}, [fontFamily])
+	
 	function updateDefaultSectionId(id?: string) {
 		if (!id) {
 			localStorage.removeItem('defaultSectionId');
@@ -166,6 +177,13 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		}
 
 		setPageContent(pageContent);
+		setInitalPageContent(pageContent.content)
+
+		// Preset page content
+		const pageContentEl = document.getElementById('page-content');
+		if (pageContentEl) {
+			pageContentEl.innerHTML = pageContent?.content as string;
+		}
 	}
 
 	function executeContextMenuItem(e: any, action: () => void) {
@@ -297,6 +315,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
 	let updatePageContentTimer: any;
 	async function updatePageContent(content: string) {
+		console.log(content)
 		const newPageContent: PageContent = {
 			...pageContent as PageContent,
 			content,
@@ -388,7 +407,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						<div className="view tab">View</div>
 					</div>
 					<div className="tools">
-						<FontDropdown></FontDropdown>
+						<FontDropdown fontFamily={fontFamily} setFontFamily={setFontFamily}></FontDropdown>
 					</div>
 				</div>
 			</header>
@@ -472,7 +491,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 					<div className="title-cont">
 						{selectedPage &&
 							<>
-								<div className="title" id="title" contentEditable={true} onInput={e => updatePageName(e.currentTarget.textContent as string)}>{ }</div>
+								<div className="title" id="title" contentEditable="true" onInput={e => updatePageName(e.currentTarget.textContent as string)}>{ }</div>
 								<div className="timestamp">
 									<div className="date">{getFormatedDate(selectedPage.date)}</div>
 									<div className="time"></div>
@@ -480,7 +499,26 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 							</>
 						}
 					</div>
-					{pageContent && <textarea value={pageContent.content} onChange={e => updatePageContent(e.target.value)}></textarea>}
+					{
+						selectedPage && 
+						<Editor 
+						apiKey='oiveiviekj3iuvnfezlpcb3hkw6cqf60akeo58hxw0v56evb'
+						initialValue={initialPageContent}
+						onEditorChange={e => updatePageContent(e)}
+						onSelectionChange={(e, editor) => {
+							setFontFamily(editor.queryCommandValue('FontName'))
+						}}
+						onInit={(evt, editor) => { 
+							editorRef.current = editor as any
+						}}
+						init={{
+							height: 500,
+							menubar: false,
+							toolbar: false,
+							statusbar: false,
+							content_style: "p { font-family: 'Calibri' }"
+						}}></Editor>
+					}
 
 				</section>
 			</main>

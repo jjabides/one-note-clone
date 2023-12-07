@@ -57,7 +57,7 @@ section .page-content {
   border-bottom: 1px solid rgba(1, 1, 1, 0.3);
 }
 
-textarea {
+.page-content {
   background-color: transparent;
   color: black;
   padding: 0px 8px;
@@ -277,4 +277,13 @@ h5 {
   overflow: hidden;
   text-overflow: ellipsis;
   align-items: center;
+}
+
+.span-line {
+  border: 1px solid black;
+  padding: 0px 8px;
+}
+
+.page-content p {
+  margin: 0;
 }
