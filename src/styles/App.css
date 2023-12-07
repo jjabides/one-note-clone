@@ -217,10 +217,9 @@ h5 {
   padding: 0px 8px;
 }
 
-.tools .font-dropdown {
+.tools .dropdown {
   display: flex;
   border: 1px solid rgba(0, 0, 0, 0.4);
-  width: 128px;
   height: 32px;
   font-size: 14px;
   align-items: center;
@@ -228,23 +227,25 @@ h5 {
   position: relative;
 }
 
-.font-dropdown .dropdown-value {
+.dropdown .dropdown-value {
   width: 100%;
   padding-left: 8px;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-wrap: nowrap;
 }
 
-.font-dropdown .dropdown-btn {
+.dropdown .dropdown-btn {
   width: 20px;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0px 3px;
+  flex-shrink: 0;
 }
 
-.font-dropdown .dropdown-btn img {
+.dropdown .dropdown-btn img {
   width: 100%;
   rotate: 180deg;
 }

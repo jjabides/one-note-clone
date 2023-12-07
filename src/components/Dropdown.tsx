@@ -1,21 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import Arrow_No_Tail from "../images/Arrow_No_Tail.svg";
 
-const options = [
-    'Arial',
-    'Calibri',
-    'Comic Sans MS',
-    'Consolas',
-    'Corbel',
-    'Courier New',
-    'Georgia',
-    'Segoe UI',
-    'Tahoma',
-    'Times New Roman',
-    'Verdana',
-];
+interface Dropdown {
+    options: string[];
+    selectedOption: string;
+    setSelectedOption: (option: string) => void;
+    width: number;
+    borderWidth?: string;
+    borderRadius?: string;
+}
 
-export default function FontDropdown({ fontFamily, setFontFamily }: { fontFamily: string, setFontFamily: (value: string) => void }) {
+export default function Dropdown({ options, selectedOption, setSelectedOption, width, borderWidth, borderRadius }: Dropdown) {
     const [open, setOpen] = useState<boolean>(false);
     const dropdownEl = useRef<HTMLElement>()
 
@@ -44,13 +39,13 @@ export default function FontDropdown({ fontFamily, setFontFamily }: { fontFamily
 
 
     function selectOption(option: string) {
-        setFontFamily(option);
+        setSelectedOption(option);
         setOpen(false);
     }
 
     return <>
-        <div className="font-dropdown" ref={dropdownEl as any}>
-            <div className="dropdown-value">{fontFamily}</div>
+        <div className="dropdown" ref={dropdownEl as any} style={{ width, borderWidth, borderRadius }}>
+            <div className="dropdown-value">{selectedOption}</div>
             <div className={`dropdown-btn btn ${open ? 'selected' : ''}`} onClick={() => setOpen(!open)}>
                 <img src={Arrow_No_Tail} />
             </div>

@@ -3,8 +3,9 @@ import './styles/App.css'
 import { IDBPDatabase } from 'idb';
 import Modal from './components/Modal';
 import NavGroup from './components/NavGroup';
-import FontDropdown from './components/FontDropdown';
 import { Editor, } from '@tinymce/tinymce-react';
+import { Editor as TinyMCEEditor } from "tinymce";
+import Dropdown from './components/Dropdown';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -34,6 +35,33 @@ const WEEK_MAP: any = {
 	'Sun': 'Sunday',
 }
 
+const fonts = [
+	'Arial',
+	'Calibri',
+	'Comic Sans MS',
+	'Consolas',
+	'Corbel',
+	'Courier New',
+	'Georgia',
+	'Segoe UI',
+	'Tahoma',
+	'Times New Roman',
+	'Verdana',
+];
+
+const fontSizes = [
+	'8pt',
+	'10pt',
+	'11pt',
+	'12pt',
+	'14pt',
+	'16pt',
+	'18pt',
+	'24pt',
+	'36pt',
+	'48pt'
+]
+
 function App({ initialProps }: { initialProps: InitialProps }) {
 	const db: IDBPDatabase = initialProps.db;
 	const [sections, setSections] = useState<Section[]>(initialProps.sections);
@@ -58,7 +86,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 	const [initialPageContent, setInitalPageContent] = useState<string>();
 
 	const [fontFamily, setFontFamily] = useState<string>('Calibri');
-	const editorRef = useRef()
+	const [fontSize, setFontSize] = useState<string>('11px')
+	const editorRef = useRef<TinyMCEEditor>()
 
 	// Update pages when selectedSection changes 
 	useEffect(() => {
@@ -87,12 +116,6 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		}
 	}, [selectedPage]);
 
-	useEffect(() => {
-		if (!fontFamily || pageContent === undefined || !editorRef.current) return;
-
-		(editorRef.current as any).execCommand('FontName', false, fontFamily);
-	}, [fontFamily])
-	
 	function updateDefaultSectionId(id?: string) {
 		if (!id) {
 			localStorage.removeItem('defaultSectionId');
@@ -171,9 +194,11 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 			.objectStore('pageContent')
 			.get(selectedPageId);
 
-		if (!pageContent) pageContent = {
-			id: selectedPageId,
-			content: ""
+		if (!pageContent) {
+			pageContent = {
+				id: selectedPageId,
+				content: ""
+			}
 		}
 
 		setPageContent(pageContent);
@@ -315,7 +340,6 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
 	let updatePageContentTimer: any;
 	async function updatePageContent(content: string) {
-		console.log(content)
 		const newPageContent: PageContent = {
 			...pageContent as PageContent,
 			content,
@@ -392,6 +416,18 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		setPages([...items as Page[]])
 	}
 
+	function updateFontFamily(value: string) {
+		if (!editorRef.current) return;
+		editorRef.current.execCommand('FontName', false, value);
+		setFontFamily(value);
+	}
+
+	function updateFontSize(value: string) {
+		if (!editorRef.current) return;
+		editorRef.current.execCommand('FontSize', false, value);
+		setFontSize(value);
+	}
+
 	return (
 		<div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
 			<header>
@@ -407,7 +443,20 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						<div className="view tab">View</div>
 					</div>
 					<div className="tools">
-						<FontDropdown fontFamily={fontFamily} setFontFamily={setFontFamily}></FontDropdown>
+						<Dropdown
+							selectedOption={fontFamily}
+							setSelectedOption={updateFontFamily}
+							width={128}
+							options={fonts}
+							borderRadius='4px 0px 0px 4px'></Dropdown>
+						<Dropdown
+							options={fontSizes}
+							setSelectedOption={updateFontSize}
+							selectedOption={fontSize}
+							width={64}
+							borderWidth='1px 1px 1px 0px'
+							borderRadius='0px 4px 4px 0px'
+						></Dropdown>
 					</div>
 				</div>
 			</header>
@@ -500,24 +549,27 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						}
 					</div>
 					{
-						selectedPage && 
-						<Editor 
-						apiKey='oiveiviekj3iuvnfezlpcb3hkw6cqf60akeo58hxw0v56evb'
-						initialValue={initialPageContent}
-						onEditorChange={e => updatePageContent(e)}
-						onSelectionChange={(e, editor) => {
-							setFontFamily(editor.queryCommandValue('FontName'))
-						}}
-						onInit={(evt, editor) => { 
-							editorRef.current = editor as any
-						}}
-						init={{
-							height: 500,
-							menubar: false,
-							toolbar: false,
-							statusbar: false,
-							content_style: "p { font-family: 'Calibri' }"
-						}}></Editor>
+						selectedPage &&
+						<Editor
+							apiKey='oiveiviekj3iuvnfezlpcb3hkw6cqf60akeo58hxw0v56evb'
+							initialValue={initialPageContent}
+							onEditorChange={e => updatePageContent(e)}
+							onSelectionChange={(e, editor) => {
+								const fontName = editor.queryCommandValue('FontName');
+								const fontSize = editor.queryCommandValue('FontSize');
+								setFontFamily(fontName)
+								setFontSize(fontSize)
+							}}
+							onInit={(evt, editor) => {
+								editorRef.current = editor
+							}}
+							init={{
+								height: 500,
+								menubar: false,
+								toolbar: false,
+								statusbar: false,
+								content_style: 'p { font-family: Calibri; }'
+							}}></Editor>
 					}
 
 				</section>
