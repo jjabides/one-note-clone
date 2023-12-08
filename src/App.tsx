@@ -11,6 +11,7 @@ import Italic from "./images/Italic.svg";
 import Underline from "./images/Underline.svg";
 import ToggleButton from './components/ToggleButton';
 import HighlightButton from './components/HighlightButton';
+import FontColorButton from './components/FontColorButton';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -459,6 +460,11 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		editorRef.current.execCommand('BackColor', false, color)
 	}
 
+	function applyFontColor(color: string) {
+		if (!editorRef.current) return;
+		editorRef.current.execCommand('ForeColor', false, color)
+	}
+
 	return (
 		<div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
 			<header>
@@ -510,6 +516,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 								iconSize={16}
 							></ToggleButton>
 							<HighlightButton applyColor={applyHighlight}></HighlightButton>
+							<FontColorButton applyColor={applyFontColor}></FontColorButton>
 						</span>
 					</div>
 				</div>

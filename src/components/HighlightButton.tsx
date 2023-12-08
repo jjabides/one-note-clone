@@ -32,6 +32,7 @@ export default function HighlightButton({ applyColor }: HighlightButton) {
         applyColor(option);
         e.target.dispatchEvent(new Event('close-dropdown', { bubbles: true }))
     }
+    
 
     return <ButtonDropdown
         onClick={() => applyColor(color)}
@@ -50,7 +51,7 @@ export default function HighlightButton({ applyColor }: HighlightButton) {
             <div className="highlight-color-menu dropdown-window">
                 <div className="color-options">
                     {options.map(option =>
-                        <div className="color-box" onClick={e => selectColor(e, option)}>
+                        <div key={option} className="color-box" onClick={e => selectColor(e, option)}>
                             <div className="color" style={{ backgroundColor: option }}></div>
                         </div>)}
                 </div>

@@ -1,0 +1,31 @@
+.font-color-menu {
+    padding: 4px 0px;
+}
+
+.font-color-menu .row .color-box {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.font-color-menu .row {
+    display: grid;
+    grid-template-columns: repeat(10, auto);
+    padding: 4px;
+}
+
+.color-box:hover {
+    background-color: rgb(224, 224, 224);
+}
+
+.color-box:hover .color {
+    scale: 0.9;
+}
+
+.font-color-menu .color {
+    width: 20px;
+    height: 20px;
+}
