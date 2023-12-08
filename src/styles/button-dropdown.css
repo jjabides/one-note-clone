@@ -1,0 +1,20 @@
+.button-dropdown {
+    width: 32px;
+    height: 32px;
+    position: relative;
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.button-dropdown .execute-btn.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 32px;
+}
+
+.button-dropdown .execute-btn svg {
+    width: 20px;
+    height: 20px;
+}

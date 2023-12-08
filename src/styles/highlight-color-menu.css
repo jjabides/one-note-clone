@@ -1,0 +1,66 @@
+.highlight-color-menu {
+    padding: 4px 0px;
+}
+
+.highlight-color-menu .color-options {
+    display: grid;
+    grid-template-columns: repeat(5, auto);
+    padding: 4px;
+}
+
+.highlight-color-menu .color-options .color-box {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.color-box:hover {
+    background-color: rgb(224, 224, 224);
+}
+
+.color-box:hover .color {
+    scale: 0.9;
+}
+
+.highlight-color-menu .color-options .color-box .color {
+    width: 20px;
+    height: 20px;
+}
+
+.separator-cont {
+    display: flex;
+    justify-content: center;
+    padding: 4px 8px;
+}
+
+.separator {
+    width: 100%;
+    height: 1px;
+    padding: 0px 8px;
+    background-color: rgb(175, 175, 175);
+}
+
+.no-color {
+    height: 32px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 12px;
+    margin: 0px 8px;
+    padding: 0px 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.no-color:hover {
+    background-color: rgb(224, 224, 224);
+}
+
+.no-color-box {
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+}

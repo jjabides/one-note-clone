@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Arrow_No_Tail from "../images/Arrow_No_Tail.svg";
+import DropdownButton from "./DropdownButton";
 
 interface Dropdown {
     options: string[];
@@ -12,7 +12,7 @@ interface Dropdown {
 
 export default function Dropdown({ options, selectedOption, setSelectedOption, width, borderWidth, borderRadius }: Dropdown) {
     const [open, setOpen] = useState<boolean>(false);
-    const dropdownEl = useRef<HTMLElement>()
+    const dropdownRef = useRef<HTMLElement>()
 
     useEffect(() => {
         window.addEventListener('click', onWindowClick)
@@ -29,7 +29,7 @@ export default function Dropdown({ options, selectedOption, setSelectedOption, w
 
         // Hide dropdown if click is outside of dropdown element
         while (currentEL) {
-            if (currentEL === dropdownEl.current) {
+            if (currentEL === dropdownRef.current) {
                 return;
             }
             currentEL = currentEL.parentElement as HTMLElement;
@@ -44,13 +44,11 @@ export default function Dropdown({ options, selectedOption, setSelectedOption, w
     }
 
     return <>
-        <div className="dropdown" ref={dropdownEl as any} style={{ width, borderWidth, borderRadius }}>
+        <div className="dropdown" ref={dropdownRef as any} style={{ width, borderWidth, borderRadius }}>
             <div className="dropdown-value">{selectedOption}</div>
-            <div className={`dropdown-btn btn ${open ? 'selected' : ''}`} onClick={() => setOpen(!open)}>
-                <img src={Arrow_No_Tail} />
-            </div>
+            <DropdownButton active={open} onClick={() => setOpen(!open)}></DropdownButton>
             {
-                open && <ul className="dropdown-list">
+                open && <ul className="dropdown-list dropdown-window">
                     {
                         options.map(option =>
                             <li
