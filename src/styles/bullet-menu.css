@@ -1,0 +1,36 @@
+.bullet-menu .bullet-options {
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.bullet-menu .bullet-options .bullet-cont {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    cursor: pointer;
+    border: 4px solid transparent;
+}
+
+.bullet-cont:hover, .bullet-cont.selected {
+    border-color: gray !important;
+}
+
+.bullet-cont .disc {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: black;
+}
+
+.bullet-cont .circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.bullet-cont .square {
+    width: 10px;
+    height: 10px;
+    background-color: black;
+}

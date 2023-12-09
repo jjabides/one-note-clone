@@ -329,3 +329,9 @@ h5 {
   display: flex;
   justify-content: center;
 }
+
+.vertical-separator {
+  height: 28px;
+  background-color: rgb(175, 175, 175);
+  width: 1px;
+}

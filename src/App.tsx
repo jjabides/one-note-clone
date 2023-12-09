@@ -14,6 +14,7 @@ import HighlightButton from './components/HighlightButton';
 import FontColorButton from './components/FontColorButton';
 import ClearFormattingButton from './components/ClearFormattingButton';
 import FontButton from './components/FontStyleButton';
+import BulletButton from './components/BulletButton';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -477,6 +478,13 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		editorRef.current.execCommand(style);
 	}
 
+	function applyBullet(style: string) {
+		if (!editorRef.current) return;
+		editorRef.current.execCommand('InsertUnorderedList', false, {
+			'list-style-type': style,
+		})
+	}
+
 	return (
 		<div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
 			<header>
@@ -532,6 +540,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 							<ClearFormattingButton onClick={clearFormatting}></ClearFormattingButton>
 							<FontButton applyStyle={applyFontStyle}></FontButton>
 						</span>
+						<span className="vertical-separator"></span>
+						<BulletButton applyStyle={applyBullet}></BulletButton>
 					</div>
 				</div>
 			</header>
@@ -648,7 +658,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 								menubar: false,
 								toolbar: false,
 								statusbar: false,
-								content_style: 'p { font-family: Calibri; }'
+								content_style: 'p { font-family: Calibri; }',
+								plugins: ['lists']
 							}}></Editor>
 					}
 
