@@ -15,6 +15,8 @@ import FontColorButton from './components/FontColorButton';
 import ClearFormattingButton from './components/ClearFormattingButton';
 import FontButton from './components/FontStyleButton';
 import BulletButton from './components/BulletButton';
+import IndentButton from './components/IndentButton';
+import OutdentButton from './components/OutdentButton';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -485,6 +487,16 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		})
 	}
 
+	function applyOutdent() {
+		if (!editorRef.current) return;
+		editorRef.current.execCommand('Outdent');
+	}
+
+	function applyIndent() {
+		if (!editorRef.current) return;
+		editorRef.current.execCommand('Indent');
+	}
+
 	return (
 		<div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
 			<header>
@@ -542,6 +554,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						</span>
 						<span className="vertical-separator"></span>
 						<BulletButton applyStyle={applyBullet}></BulletButton>
+						<OutdentButton onClick={applyOutdent}></OutdentButton>
+						<IndentButton onClick={applyIndent}></IndentButton> 	
 					</div>
 				</div>
 			</header>

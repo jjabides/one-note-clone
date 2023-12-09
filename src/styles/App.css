@@ -87,6 +87,17 @@ ul li:nth-of-type(3) {
 .btn {
   cursor: pointer;
   transition: background-color .2s;
+  -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.btn:focus {
+  outline: none !important;
 }
 
 .btn:hover, .btn.selected {
