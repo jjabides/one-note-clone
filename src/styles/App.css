@@ -346,3 +346,19 @@ h5 {
   background-color: rgb(175, 175, 175);
   width: 1px;
 }
+
+.gap-8 {
+  gap: 8px;
+}
+
+.gap-12 {
+  gap: 12px;
+}
+
+.btn-2 {
+  cursor: default;
+}
+
+.btn-2:hover {
+  background-color: rgb(224, 224, 224);
+}

@@ -17,6 +17,7 @@ import FontButton from './components/FontStyleButton';
 import BulletButton from './components/BulletButton';
 import IndentButton from './components/IndentButton';
 import OutdentButton from './components/OutdentButton';
+import JustifyButton from './components/JustifyButton';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -497,6 +498,11 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		editorRef.current.execCommand('Indent');
 	}
 
+	function applyJustify(style: string) {
+		if (!editorRef.current) return;
+		editorRef.current.execCommand(style);
+	}
+
 	return (
 		<div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
 			<header>
@@ -555,7 +561,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						<span className="vertical-separator"></span>
 						<BulletButton applyStyle={applyBullet}></BulletButton>
 						<OutdentButton onClick={applyOutdent}></OutdentButton>
-						<IndentButton onClick={applyIndent}></IndentButton> 	
+						<IndentButton onClick={applyIndent}></IndentButton>
+						<JustifyButton applyStyle={applyJustify}></JustifyButton>
 					</div>
 				</div>
 			</header>
