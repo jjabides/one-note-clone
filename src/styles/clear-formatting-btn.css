@@ -1,0 +1,12 @@
+.clear-formatting-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.clear-formatting-btn img {
+    width: 20px;
+    height: 20px;
+} 
