@@ -298,3 +298,34 @@ h5 {
 .tools span {
   display: flex;
 }
+
+.size-32-32 {
+  width: 32px;
+  height: 32px;
+}
+
+.size-18-18 {
+  width: 18px;
+  height: 18px;
+}
+
+.size-16-16 {
+  width: 16px;
+  height: 16px;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-center-vertical {
+  display: flex;
+  align-items: center;
+}
+
+.flex-center-horizontal {
+  display: flex;
+  justify-content: center;
+}

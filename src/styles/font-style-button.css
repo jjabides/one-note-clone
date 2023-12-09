@@ -1,0 +1,21 @@
+.font-style-button {
+
+}
+
+.font-style-menu {
+    padding: 4px;
+}
+
+.font-style-menu h5 {
+    padding-left: 8px;
+    margin: 6px 0px;
+}
+
+.font-style-menu li:hover {
+    background-color: rgb(224, 224, 224);
+}
+
+.font-style-menu li {
+    gap: 12px;
+    padding-left: 8px;
+}
