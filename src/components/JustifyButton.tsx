@@ -18,22 +18,22 @@ export default function JustifyButton({ applyStyle }: JustifyButtonProps) {
     }
 
     return <ButtonDropdown
-        onClick={() => { }}
+        onClick={() => applyStyle(justify)}
         buttonContent={
             <img src={JustifyLeft} className="size-16-16" />
         }
         menu={
             <div className="justify-button-menu dropdown-window pad-8">
                 <ul>
-                    <li className="flex-center-vertical gap-12 pad-8 btn" onClick={e => selectStyle(e, 'JustifyLeft')}>
+                    <li className={`flex-center-vertical gap-12 pad-8 btn ${justify === 'JustifyLeft' ? 'selected' : ''}`} onClick={e => selectStyle(e, 'JustifyLeft')}>
                         <img src={JustifyLeft} className="size-16-16"></img>
                         <span>Align Left</span>
                     </li>
-                    <li className="flex-center-vertical gap-12 pad-8 btn" onClick={e => selectStyle(e, 'JustifyCenter')}>
+                    <li className={`flex-center-vertical gap-12 pad-8 btn ${justify === 'JustifyCenter' ? 'selected' : ''}`} onClick={e => selectStyle(e, 'JustifyCenter')}>
                         <img src={JustifyCenter} className="size-16-16"></img>
                         <span>Align Center</span>
                     </li>
-                    <li className="flex-center-vertical gap-12 pad-8 btn" onClick={e => selectStyle(e, 'JustifyRight')}>
+                    <li className={`flex-center-vertical gap-12 pad-8 btn ${justify === 'JustifyRight' ? 'selected' : ''}`} onClick={e => selectStyle(e, 'JustifyRight')}>
                         <img src={JustifyRight} className="size-16-16"></img>
                         <span>Align Right</span>
                     </li>
