@@ -531,7 +531,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 								</div>
 							)
 						}
-						<div className="select-indicator-wrapper" style={{ transform: `translateX(${selectedTabIndex * 64}px)`}}>
+						<div className="select-indicator-wrapper" style={{ transform: `translateX(${selectedTabIndex * 64}px)` }}>
 							<div className="select-indicator"></div>
 						</div>
 					</div>
@@ -589,79 +589,85 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 			</header>
 			<main>
 				<nav>
-					<NavGroup
-						title={'Sections'}
-						selectedItemId={selectedSectionId}
-						updateSelectedItemId={updateDefaultSectionId}
-						items={sections}
-						onContextMenu={(e, item) => onContextMenu(e, [
-							{
-								name: "Rename",
-								icon: "",
-								action: () => {
-									setModal({
-										title: 'Section Name',
-										description: 'Enter a section name:',
-										input: true,
-										inputValue: item.name,
-										onSubmit: (value) => updateSectionName(item as Section, value),
-										onCancel: () => { setModal(null) }
-									})
-								}
-							},
-							{
-								name: "Delete",
-								icon: "",
-								action: () => {
-									setModal({
-										title: 'Permanently Delete Section',
-										description: 'Deleting a section can\'t be undone. Do you want to permanently delete this section and all of its pages?',
-										onSubmit: () => { deleteSection(item.id) },
-										onCancel: () => { setModal(null) },
-										confirmBtnTitle: 'Permanently Delete'
-									})
-								}
-							}
-						])}
-						addItemButton={{
-							title: 'Add Section',
-							onClick: () => setModal(
-								{
+					<div className="side-nav-bar"></div>
+					<div className="notebook-nav">
+						<div className="notebook-nav-header"></div>
+						<div className="notebook-nav-body">
+							<NavGroup
+								title={'Sections'}
+								selectedItemId={selectedSectionId}
+								updateSelectedItemId={updateDefaultSectionId}
+								items={sections}
+								onContextMenu={(e, item) => onContextMenu(e, [
+									{
+										name: "Rename",
+										icon: "",
+										action: () => {
+											setModal({
+												title: 'Section Name',
+												description: 'Enter a section name:',
+												input: true,
+												inputValue: item.name,
+												onSubmit: (value) => updateSectionName(item as Section, value),
+												onCancel: () => { setModal(null) }
+											})
+										}
+									},
+									{
+										name: "Delete",
+										icon: "",
+										action: () => {
+											setModal({
+												title: 'Permanently Delete Section',
+												description: 'Deleting a section can\'t be undone. Do you want to permanently delete this section and all of its pages?',
+												onSubmit: () => { deleteSection(item.id) },
+												onCancel: () => { setModal(null) },
+												confirmBtnTitle: 'Permanently Delete'
+											})
+										}
+									}
+								])}
+								addItemButton={{
 									title: 'Add Section',
-									description: 'Enter a Section Name',
-									input: true,
-									onCancel: () => { setModal(null) },
-									onSubmit: addSection,
-								})
-						}}
-						onUpdateOrder={updateSectionOrder}
-						backgroundColor={'rgb(255, 228, 192)'}
-					></NavGroup>
-					<NavGroup
-						title={'Pages'}
-						selectedItemId={selectedPageId}
-						updateSelectedItemId={updateDefaultPageId}
-						items={pages}
-						onContextMenu={(e, item) => onContextMenu(e, [{
-							name: "Delete",
-							icon: "",
-							action: () => {
-								setModal({
-									title: 'Delete Page?',
-									description: 'Are you sure you want to delete this page?',
-									onSubmit: () => { deletePage(item.id) },
-									onCancel: () => { setModal(null) },
-									confirmBtnTitle: 'Delete'
-								})
-							}
-						}])}
-						addItemButton={{
-							title: 'Add Page',
-							onClick: addPage
-						}}
-						onUpdateOrder={updatePageOrder}
-						backgroundColor={'rgb(255, 205, 141)'}
-						placeHolderItemTitle='Untitled Page'></NavGroup>
+									onClick: () => setModal(
+										{
+											title: 'Add Section',
+											description: 'Enter a Section Name',
+											input: true,
+											onCancel: () => { setModal(null) },
+											onSubmit: addSection,
+										})
+								}}
+								onUpdateOrder={updateSectionOrder}
+								backgroundColor={'#f1f1f1'}
+							></NavGroup>
+							<NavGroup
+								title={'Pages'}
+								selectedItemId={selectedPageId}
+								updateSelectedItemId={updateDefaultPageId}
+								items={pages}
+								onContextMenu={(e, item) => onContextMenu(e, [{
+									name: "Delete",
+									icon: "",
+									action: () => {
+										setModal({
+											title: 'Delete Page?',
+											description: 'Are you sure you want to delete this page?',
+											onSubmit: () => { deletePage(item.id) },
+											onCancel: () => { setModal(null) },
+											confirmBtnTitle: 'Delete'
+										})
+									}
+								}])}
+								addItemButton={{
+									title: 'Add Page',
+									onClick: addPage
+								}}
+								onUpdateOrder={updatePageOrder}
+								backgroundColor={'#f1f1f1'}
+								placeHolderItemTitle='Untitled Page'></NavGroup>
+						</div>
+					</div>
 				</nav>
 				<section className="content">
 					<div className="title-cont">

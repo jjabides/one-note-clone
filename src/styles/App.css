@@ -21,7 +21,31 @@ main {
 
 nav {
   height: 100%;
-  width: 512px;
+  display: grid;
+  grid-template-columns: 50px 376px;
+  overflow: hidden;
+}
+
+.side-nav-bar {
+  width: 100%;
+  height: 100%;
+  background-color: #edebe9;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.notebook-nav {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+
+.notebook-nav-header {
+  height: 46px;
+  width: 100%;
+  background-color: #edebe9;
+}
+
+.notebook-nav-body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   overflow: hidden;
@@ -75,32 +99,37 @@ ul {
 
 ul li {
   height: 40px;
-  width: 256px;
+  width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-ul li:nth-of-type(3) {
+.size-256-40 {
+  width: 256px;
+  height: 40px;
 }
+
+ul li:nth-of-type(3) {}
 
 .btn {
   cursor: pointer;
   transition: background-color .2s;
   -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .btn:focus {
   outline: none !important;
 }
 
-.btn:hover, .btn.selected {
+.btn:hover,
+.btn.selected {
   background-color: rgb(163, 163, 163, 0.5);
 }
 
@@ -142,6 +171,7 @@ h5 {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -208,9 +238,21 @@ h5 {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
-.ribbon .tabs .tab.selected:hover ~ .select-indicator-wrapper .select-indicator {
+.ribbon .tabs .tab:focus {
+  outline: none !important;
+}
+
+.ribbon .tabs .tab.selected:hover~.select-indicator-wrapper .select-indicator {
   width: 100%;
 }
 
@@ -241,7 +283,7 @@ h5 {
   height: 42px;
   border-radius: 6px;
   background-color: white;
-  box-shadow: 0px 1px 2px 1px rgba(0,0,0,0.2);
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
   position: absolute;
   top: 36px;
   left: 8px;
@@ -304,6 +346,7 @@ h5 {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0px);

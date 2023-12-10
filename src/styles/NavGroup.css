@@ -4,6 +4,7 @@
     display: grid;
     grid-template-rows: auto 1fr auto;
     overflow: hidden;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .nav-group ul {
