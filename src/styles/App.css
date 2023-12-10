@@ -198,6 +198,7 @@ h5 {
 .ribbon .tabs {
   display: flex;
   height: 36px;
+  position: relative;
 }
 
 .ribbon .tabs .tab {
@@ -207,11 +208,32 @@ h5 {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border: 1px solid black;
+}
+
+.ribbon .tabs .tab.selected:hover ~ .select-indicator-wrapper .select-indicator {
+  width: 100%;
+}
+
+.tabs .select-indicator-wrapper {
+  width: 64px;
+  height: 36px;
+  position: absolute;
+  left: 0;
+  display: flex;
+  pointer-events: none;
+  transition: transform .3s;
+}
+
+.tabs .select-indicator {
+  width: 70%;
+  height: 2px;
+  margin: auto auto 2px auto;
+  background-color: purple;
+  transition: width .2s;
 }
 
 .ribbon .tabs .tab:hover {
-  border-bottom: 1px solid rgba(128, 0, 128, 0.253);
+  background-color: rgb(240, 240, 240);
 }
 
 .ribbon .tools {

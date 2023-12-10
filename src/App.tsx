@@ -74,6 +74,14 @@ const fontSizes = [
 	'48pt'
 ]
 
+const tabs = [
+	'File',
+	'Home',
+	'Insert',
+	'Draw',
+	'View',
+]
+
 function App({ initialProps }: { initialProps: InitialProps }) {
 	const db: IDBPDatabase = initialProps.db;
 	const [sections, setSections] = useState<Section[]>(initialProps.sections);
@@ -103,6 +111,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 	const [italic, setItalic] = useState<boolean>(false);
 	const [underline, setUnderline] = useState<boolean>(false);
 	const editorRef = useRef<TinyMCEEditor>();
+
+	// Tab state
+	const [selectedTabIndex, setSelectedTabIndex] = useState<number>(1);
 
 	// Update pages when selectedSection changes 
 	useEffect(() => {
@@ -511,11 +522,18 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 				</div>
 				<div className="ribbon">
 					<div className="tabs">
-						<div className="file tab">File</div>
-						<div className="home tab">Home</div>
-						<div className="insert tab">Insert</div>
-						<div className="draw tab">Draw</div>
-						<div className="view tab">View</div>
+						{
+							tabs.map((tab, index) =>
+								<div
+									className={`${tab.toLowerCase()} tab ${selectedTabIndex === index ? 'selected' : ''}`}
+									onClick={() => setSelectedTabIndex(index)}>
+									{tab}
+								</div>
+							)
+						}
+						<div className="select-indicator-wrapper" style={{ transform: `translateX(${selectedTabIndex * 64}px)`}}>
+							<div className="select-indicator"></div>
+						</div>
 					</div>
 					<div className="tools">
 						<span>
@@ -559,10 +577,13 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 							<FontButton applyStyle={applyFontStyle}></FontButton>
 						</span>
 						<span className="vertical-separator"></span>
-						<BulletButton applyStyle={applyBullet}></BulletButton>
-						<OutdentButton onClick={applyOutdent}></OutdentButton>
-						<IndentButton onClick={applyIndent}></IndentButton>
-						<JustifyButton applyStyle={applyJustify}></JustifyButton>
+						<span>
+							<BulletButton applyStyle={applyBullet}></BulletButton>
+							<OutdentButton onClick={applyOutdent}></OutdentButton>
+							<IndentButton onClick={applyIndent}></IndentButton>
+							<JustifyButton applyStyle={applyJustify}></JustifyButton>
+						</span>
+
 					</div>
 				</div>
 			</header>
