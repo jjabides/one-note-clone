@@ -395,6 +395,21 @@ h5 {
   height: 16px;
 }
 
+.size-18-32 {
+  width: 18px;
+  height: 32px;
+}
+
+.size-16-32 {
+  width: 16px;
+  height: 32px;
+}
+
+.size-10-10 {
+  width: 10px;
+  height: 10px;
+}
+
 .flex-center {
   display: flex;
   align-items: center;
@@ -444,4 +459,17 @@ h5 {
 .uninteractive {
   pointer-events: none !important;
   opacity: 0.5 !important;
+}
+
+.grid-auto-auto {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.border-radius-0-4-4-0 {
+  border-radius: 0px 4px 4px 0px;
+}
+
+.border-radius-4 {
+  border-radius: 4px;
 }

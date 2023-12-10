@@ -1,0 +1,1 @@
+type ClipboardAction = 'Cut' | 'Copy' | 'Paste';

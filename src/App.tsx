@@ -19,6 +19,7 @@ import IndentButton from './components/IndentButton';
 import OutdentButton from './components/OutdentButton';
 import JustifyButton from './components/JustifyButton';
 import UndoRedoDropdown from './components/UndoRedoDropdown';
+import ClipboardDropdown from './components/ClipboardDropdown';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -116,6 +117,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 	const [hasUndo, setHasUndo] = useState<boolean>(false);
 	const [hasRedo, setHasRedo] = useState<boolean>(false);
 
+	const [textSelection, setTextSelection] = useState<string>('');
+
 	// Tab state
 	const [selectedTabIndex, setSelectedTabIndex] = useState<number>(1);
 
@@ -145,8 +148,10 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 			titleEl.focus()
 		}
 
+		// Reset ribbon state
 		setHasUndo(false)
 		setHasRedo(false)
+		setTextSelection('');
 	}, [selectedPage]);
 
 	function updateDefaultSectionId(id?: string) {
@@ -526,6 +531,11 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		editorRef.current.execCommand(command);
 	}
 
+	function applyClipboardAction(action: ClipboardAction) {
+		if (!editorRef.current) return;
+		editorRef.current.execCommand(action);
+	}
+
 	return (
 		<div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
 			<header>
@@ -550,6 +560,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 					<div className="tools">
 						<span>
 							<UndoRedoDropdown applyUndoRedo={executeUndoRedo} hasUndo={hasUndo} hasRedo={hasRedo}></UndoRedoDropdown>
+							<ClipboardDropdown applyClipboardAction={applyClipboardAction} canCopy={textSelection.length > 0} canCut={textSelection.length > 0}></ClipboardDropdown>
 						</span>
 						<span className="vertical-separator"></span>
 						<span>
@@ -714,6 +725,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 								setUnderline(editor.queryCommandState('Underline'));
 								setHasRedo(undoManager.hasRedo());
 								setHasUndo(undoManager.hasUndo());
+								setTextSelection(editor.selection.getContent({ format: 'text' }));
 							}}
 							onInit={(evt, editor) => {
 								editorRef.current = editor

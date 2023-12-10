@@ -1,6 +1,6 @@
 import Undo from "../images/Undo.svg";
 import Redo from "../images/Redo.svg";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DropdownButton from "./DropdownButton";
 import "../styles/undo-redo-dropdown.css";
 
@@ -12,13 +12,37 @@ interface UndoRedoDropdownProps {
 
 export default function UndoRedoDropdown({ applyUndoRedo, hasUndo, hasRedo }: UndoRedoDropdownProps) {
     const [open, setOpen] = useState<boolean>(false);
+    const dropdownRef = useRef<HTMLElement>()
+
+    useEffect(() => {
+        window.addEventListener('click', onWindowClick)
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            window.removeEventListener('click', onWindowClick);
+        }
+    }, []);
+
+    function onWindowClick(e: MouseEvent) {
+        let currentEL: HTMLElement = e.target as HTMLElement;
+
+        // Hide dropdown if click is outside of dropdown element
+        while (currentEL) {
+            if (currentEL === dropdownRef.current) {
+                return;
+            }
+            currentEL = currentEL.parentElement as HTMLElement;
+        }
+        setOpen(false);
+    }
 
     function selectOption(option: 'Undo' | 'Redo') {
         applyUndoRedo(option);
         setOpen(false);
     }
 
-    return <div className="undo-redo-dropdown">
+    return <div className="undo-redo-dropdown" ref={dropdownRef as any}>
         <div className={`undo-btn-icon-wrapper flex-center size-32-32 btn ${hasUndo ? '' : 'uninteractive'}`} onClick={() => applyUndoRedo('Undo')}>
             <img src={Undo} className="size-18-18" draggable="false" />
         </div>
