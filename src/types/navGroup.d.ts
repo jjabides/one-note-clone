@@ -1,5 +1,4 @@
 interface NavGroup {
-    title: string;
     selectedItemId: string;
     updateSelectedItemId: (id: string) => void;
     items?: NavGroupItem[];

@@ -18,6 +18,7 @@ import BulletButton from './components/BulletButton';
 import IndentButton from './components/IndentButton';
 import OutdentButton from './components/OutdentButton';
 import JustifyButton from './components/JustifyButton';
+import UndoRedoDropdown from './components/UndoRedoDropdown';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -112,6 +113,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 	const [underline, setUnderline] = useState<boolean>(false);
 	const editorRef = useRef<TinyMCEEditor>();
 
+	const [hasUndo, setHasUndo] = useState<boolean>(false);
+	const [hasRedo, setHasRedo] = useState<boolean>(false);
+
 	// Tab state
 	const [selectedTabIndex, setSelectedTabIndex] = useState<number>(1);
 
@@ -140,6 +144,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 			titleEl.textContent = selectedPage.name;
 			titleEl.focus()
 		}
+
+		setHasUndo(false)
+		setHasRedo(false)
 	}, [selectedPage]);
 
 	function updateDefaultSectionId(id?: string) {
@@ -514,6 +521,11 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		editorRef.current.execCommand(style);
 	}
 
+	function executeUndoRedo(command: 'Undo' | 'Redo') {
+		if (!editorRef.current) return;
+		editorRef.current.execCommand(command);
+	}
+
 	return (
 		<div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
 			<header>
@@ -536,6 +548,10 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						</div>
 					</div>
 					<div className="tools">
+						<span>
+							<UndoRedoDropdown applyUndoRedo={executeUndoRedo} hasUndo={hasUndo} hasRedo={hasRedo}></UndoRedoDropdown>
+						</span>
+						<span className="vertical-separator"></span>
 						<span>
 							<Dropdown
 								selectedOption={fontFamily}
@@ -594,7 +610,6 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						<div className="notebook-nav-header"></div>
 						<div className="notebook-nav-body">
 							<NavGroup
-								title={'Sections'}
 								selectedItemId={selectedSectionId}
 								updateSelectedItemId={updateDefaultSectionId}
 								items={sections}
@@ -642,7 +657,6 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 								backgroundColor={'#f1f1f1'}
 							></NavGroup>
 							<NavGroup
-								title={'Pages'}
 								selectedItemId={selectedPageId}
 								updateSelectedItemId={updateDefaultPageId}
 								items={pages}
@@ -691,12 +705,15 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 								const fontName = editor.queryCommandValue('FontName');
 								const fontSize = editor.queryCommandValue('FontSize');
 								const bold = editor.queryCommandState('Bold');
+								const { undoManager } = editor;
 
 								setFontFamily(fontName)
 								setFontSize(fontSize)
 								setBold(bold)
 								setItalic(editor.queryCommandState('Italic'))
-								setUnderline(editor.queryCommandState('Underline'))
+								setUnderline(editor.queryCommandState('Underline'));
+								setHasRedo(undoManager.hasRedo());
+								setHasUndo(undoManager.hasUndo());
 							}}
 							onInit={(evt, editor) => {
 								editorRef.current = editor

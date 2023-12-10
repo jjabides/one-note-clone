@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../styles/NavGroup.css";
 
-export default function NavGroup({ title, items, selectedItemId, updateSelectedItemId, onContextMenu, addItemButton, onUpdateOrder, backgroundColor, placeHolderItemTitle }: NavGroup) {
+export default function NavGroup({ items, selectedItemId, updateSelectedItemId, onContextMenu, addItemButton, onUpdateOrder, backgroundColor, placeHolderItemTitle }: NavGroup) {
     // variables for dragging state
     const [draggedItem, setDraggedItem] = useState<NavGroupItem | null>(null);
     const [mousePosition, setMousePosition] = useState<number | null>(null);
@@ -91,7 +91,6 @@ export default function NavGroup({ title, items, selectedItemId, updateSelectedI
     }
 
     return <div className="nav-group" onMouseUp={onMouseUp} style={{ backgroundColor }}>
-        <h1 className="pad-16">{title}</h1>
         <ul onMouseMove={onMouseMove}>
             {
                 items && items.map((item, index) => (

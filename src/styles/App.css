@@ -43,6 +43,7 @@ nav {
   height: 46px;
   width: 100%;
   background-color: #edebe9;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .notebook-nav-body {
@@ -155,6 +156,10 @@ h5 {
 
 .pad-8 {
   padding: 8px;
+}
+
+.pad-0-8 {
+  padding: 0px 8px;
 }
 
 .context-menu {
@@ -426,4 +431,17 @@ h5 {
 
 .btn-2:hover {
   background-color: rgb(224, 224, 224);
+}
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.uninteractive {
+  pointer-events: none !important;
+  opacity: 0.5 !important;
 }

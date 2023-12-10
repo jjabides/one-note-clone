@@ -1,0 +1,5 @@
+.undo-redo-dropdown {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto auto;
+}
