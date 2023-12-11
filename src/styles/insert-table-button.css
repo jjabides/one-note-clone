@@ -1,0 +1,42 @@
+.insert-table-button {
+    position: relative;
+}
+
+.insert-table-menu {
+    position: absolute;
+}
+
+.insert-table-menu table {
+    border: 1px solid gray;
+}
+
+.insert-table-menu .row {
+    height: 16px;
+}
+
+.insert-table-menu .grid-cell {
+    border-left: 1px;
+    border-top: 1px;
+    border-right: 0px;
+    border-bottom: 0px;
+    border-style: solid;
+    border-color: black;
+    display: inline-block;
+}
+
+.insert-table-menu .row .grid-cell:last-of-type {
+    border-right: 1px solid black;
+}
+
+.insert-table-menu .row:last-of-type .grid-cell {
+    border-bottom: 1px solid black;
+}
+
+.grid-cell.selected {
+    background-color: rgb(224, 224, 224);
+}
+
+.table-selector {
+    width: 160px;
+    height: auto;
+}
