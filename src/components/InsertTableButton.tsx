@@ -83,10 +83,11 @@ export default function InsertTableButton({ insertTable }: InsertTableButtonProp
                 <div className="table-selector">
                     {
                         [...new Array(8)].map((row, rowIndex) =>
-                            <div className="row">
+                            <div className="row" key={rowIndex}>
                                 {
                                     [...new Array(10)].map((col, colIndex) =>
                                         <span
+                                            key={colIndex}
                                             className={`grid-cell size-16-16 ${isCellSelected(rowIndex, colIndex) ? 'selected' : ''}`}
                                             onMouseOver={() => updateTable(rowIndex, colIndex)}
                                             onClick={() => selectTableSize(rowIndex + 1, colIndex + 1)}></span>

@@ -1,6 +1,7 @@
 import ButtonDropdown from "./ButtonDropdown";
 import "../styles/font-color-menu.css";
 import { useState } from "react";
+import { standardColors } from "../utilities/colorOptions";
 
 const row1Colors = [
     '#ffffff',
@@ -15,18 +16,7 @@ const row1Colors = [
     '#F79646'
 ]
 
-const row2Colors = [
-    '#C00000',
-    '#FF0000',
-    '#FFC000',
-    '#FFFF00',
-    '#92D050',
-    '#00B050',
-    '#00B0F0',
-    '#0070C0',
-    '#002060',
-    '#7030A0',
-]
+const row2Colors = standardColors;
 
 interface FontColorButtonProps {
     applyColor: (color: string) => void;

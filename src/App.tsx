@@ -10,6 +10,8 @@ import Notebooks_Icon from "./images/Notebooks.svg";
 import Search_Icon from "./images/Search.svg";
 import Arrow_No_Tail from "./images/Arrow_No_Tail.svg";
 import Notebook_Icon from "./images/Notebook.svg";
+import Section_Icon from "./images/Section_Icon.svg";
+import { standardColors } from './utilities/colorOptions';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -251,6 +253,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 			name: name,
 			pageOrder: [],
 			date: new Date(),
+			iconColor: standardColors[ Math.floor(Math.random() * standardColors.length)]
 		}
 
 		const ids = [...sections.map(section => section.id), newSection.id];
@@ -424,7 +427,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						<div className="side-nav-bar-item btn flex-center selected">
 							<img className="size-18-18" src={Notebooks_Icon} draggable="false" />
 						</div>
-						<div className="side-nav-bar-item btn flex-center uninteractive">
+						<div className="side-nav-bar-item btn flex-center">
 							<img className="size-20-20" src={Search_Icon} draggable="false" />
 						</div>
 					</div>
