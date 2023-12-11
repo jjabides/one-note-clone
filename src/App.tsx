@@ -6,6 +6,11 @@ import NavGroup from './components/NavGroup';
 import { Editor, } from '@tinymce/tinymce-react';
 import { Editor as TinyMCEEditor } from "tinymce";
 import Ribbon from './components/Ribbon';
+import Notebooks_Icon from "./images/Notebooks.svg";
+import Search_Icon from "./images/Search.svg";
+import Arrow_No_Tail from "./images/Arrow_No_Tail.svg";
+import Notebook_Icon from "./images/Notebook.svg";
+
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
 
@@ -415,9 +420,20 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 			</header>
 			<main>
 				<nav>
-					<div className="side-nav-bar"></div>
+					<div className="side-nav-bar">
+						<div className="side-nav-bar-item btn flex-center selected">
+							<img className="size-18-18" src={Notebooks_Icon} draggable="false" />
+						</div>
+						<div className="side-nav-bar-item btn flex-center uninteractive">
+							<img className="size-20-20" src={Search_Icon} draggable="false" />
+						</div>
+					</div>
 					<div className="notebook-nav">
-						<div className="notebook-nav-header"></div>
+						<div className="notebook-nav-header flex-center-vertical gap-8 pad-0-8">
+							<img className="size-18-18" src={Notebook_Icon} />
+							<b>Your Notebook</b>
+							<img className="size-10-10" src={Arrow_No_Tail} draggable="false" style={{ rotate: '180deg' }}/>
+						</div>
 						<div className="notebook-nav-body">
 							<NavGroup
 								selectedItemId={selectedSectionId}
