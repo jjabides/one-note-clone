@@ -5,22 +5,7 @@ import Modal from './components/Modal';
 import NavGroup from './components/NavGroup';
 import { Editor, } from '@tinymce/tinymce-react';
 import { Editor as TinyMCEEditor } from "tinymce";
-import Dropdown from './components/Dropdown';
-import Bold from "./images/Bold.svg";
-import Italic from "./images/Italic.svg";
-import Underline from "./images/Underline.svg";
-import ToggleButton from './components/ToggleButton';
-import HighlightButton from './components/HighlightButton';
-import FontColorButton from './components/FontColorButton';
-import ClearFormattingButton from './components/ClearFormattingButton';
-import FontButton from './components/FontStyleButton';
-import BulletButton from './components/BulletButton';
-import IndentButton from './components/IndentButton';
-import OutdentButton from './components/OutdentButton';
-import JustifyButton from './components/JustifyButton';
-import UndoRedoDropdown from './components/UndoRedoDropdown';
-import ClipboardDropdown from './components/ClipboardDropdown';
-
+import Ribbon from './components/Ribbon';
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
 
@@ -49,41 +34,6 @@ const WEEK_MAP: any = {
 	'Sun': 'Sunday',
 }
 
-const fonts = [
-	'Arial',
-	'Calibri',
-	'Comic Sans MS',
-	'Consolas',
-	'Corbel',
-	'Courier New',
-	'Georgia',
-	'Segoe UI',
-	'Tahoma',
-	'Times New Roman',
-	'Verdana',
-];
-
-const fontSizes = [
-	'8pt',
-	'10pt',
-	'11pt',
-	'12pt',
-	'14pt',
-	'16pt',
-	'18pt',
-	'24pt',
-	'36pt',
-	'48pt'
-]
-
-const tabs = [
-	'File',
-	'Home',
-	'Insert',
-	'Draw',
-	'View',
-]
-
 function App({ initialProps }: { initialProps: InitialProps }) {
 	const db: IDBPDatabase = initialProps.db;
 	const [sections, setSections] = useState<Section[]>(initialProps.sections);
@@ -107,20 +57,18 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 	const [pageContent, setPageContent] = useState<PageContent>();
 	const [initialPageContent, setInitalPageContent] = useState<string>();
 
-	const [fontFamily, setFontFamily] = useState<string>('Calibri');
-	const [fontSize, setFontSize] = useState<string>('11px')
-	const [bold, setBold] = useState<boolean>(false);
-	const [italic, setItalic] = useState<boolean>(false);
-	const [underline, setUnderline] = useState<boolean>(false);
+	// Editor and Ribbon state
 	const editorRef = useRef<TinyMCEEditor>();
-
-	const [hasUndo, setHasUndo] = useState<boolean>(false);
-	const [hasRedo, setHasRedo] = useState<boolean>(false);
-
-	const [textSelection, setTextSelection] = useState<string>('');
-
-	// Tab state
-	const [selectedTabIndex, setSelectedTabIndex] = useState<number>(1);
+	const [ribbonState, setRibbonState] = useState<RibbonState>({
+		fontFamily: 'Calibri',
+		fontSize: '11px',
+		bold: false,
+		italic: false,
+		underline: false,
+		hasUndo: false,
+		hasRedo: false,
+		textSelection: ''
+	})
 
 	// Update pages when selectedSection changes 
 	useEffect(() => {
@@ -149,9 +97,14 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		}
 
 		// Reset ribbon state
-		setHasUndo(false)
-		setHasRedo(false)
-		setTextSelection('');
+		setRibbonState((oldState) => {
+			return {
+				...oldState,
+				hasUndo: false,
+				hasRedo: false,
+				textSelection: ''
+			}
+		})
 	}, [selectedPage]);
 
 	function updateDefaultSectionId(id?: string) {
@@ -454,165 +407,11 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		setPages([...items as Page[]])
 	}
 
-	function updateFontFamily(value: string) {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand('FontName', false, value);
-		setFontFamily(value);
-	}
-
-	function updateFontSize(value: string) {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand('FontSize', false, value);
-		setFontSize(value);
-	}
-
-	function updateBold() {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand('Bold');
-		setBold(!bold);
-	}
-
-	function updateItalic() {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand('Italic');
-		setItalic(!italic);
-	}
-
-	function updateUnderline() {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand('Underline');
-		setUnderline(!underline);
-	}
-
-	function applyHighlight(color: string) {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand('BackColor', false, color)
-	}
-
-	function applyFontColor(color: string) {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand('ForeColor', false, color)
-	}
-
-	function clearFormatting() {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand('RemoveFormat')
-	}
-
-	function applyFontStyle(style: string) {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand(style);
-	}
-
-	function applyBullet(style: string) {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand('InsertUnorderedList', false, {
-			'list-style-type': style,
-		})
-	}
-
-	function applyOutdent() {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand('Outdent');
-	}
-
-	function applyIndent() {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand('Indent');
-	}
-
-	function applyJustify(style: string) {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand(style);
-	}
-
-	function executeUndoRedo(command: 'Undo' | 'Redo') {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand(command);
-	}
-
-	function applyClipboardAction(action: ClipboardAction) {
-		if (!editorRef.current) return;
-		editorRef.current.execCommand(action);
-	}
-
 	return (
 		<div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
 			<header>
-				<div className="header">
-
-				</div>
-				<div className="ribbon">
-					<div className="tabs">
-						{
-							tabs.map((tab, index) =>
-								<div
-									className={`${tab.toLowerCase()} tab ${selectedTabIndex === index ? 'selected' : ''}`}
-									onClick={() => setSelectedTabIndex(index)}>
-									{tab}
-								</div>
-							)
-						}
-						<div className="select-indicator-wrapper" style={{ transform: `translateX(${selectedTabIndex * 64}px)` }}>
-							<div className="select-indicator"></div>
-						</div>
-					</div>
-					<div className="tools">
-						<span>
-							<UndoRedoDropdown applyUndoRedo={executeUndoRedo} hasUndo={hasUndo} hasRedo={hasRedo}></UndoRedoDropdown>
-							<ClipboardDropdown applyClipboardAction={applyClipboardAction} canCopy={textSelection.length > 0} canCut={textSelection.length > 0}></ClipboardDropdown>
-						</span>
-						<span className="vertical-separator"></span>
-						<span>
-							<Dropdown
-								selectedOption={fontFamily}
-								setSelectedOption={updateFontFamily}
-								width={128}
-								options={fonts}
-								borderRadius='4px 0px 0px 4px'></Dropdown>
-							<Dropdown
-								options={fontSizes}
-								setSelectedOption={updateFontSize}
-								selectedOption={fontSize}
-								width={64}
-								borderWidth='1px 1px 1px 0px'
-								borderRadius='0px 4px 4px 0px'
-							></Dropdown>
-						</span>
-						<span>
-							<ToggleButton
-								icon={Bold}
-								onClick={updateBold}
-								active={bold}
-								iconSize={16}
-							></ToggleButton>
-							<ToggleButton
-								icon={Italic}
-								onClick={updateItalic}
-								active={italic}
-								iconSize={16}
-							></ToggleButton>
-							<ToggleButton
-								icon={Underline}
-								onClick={updateUnderline}
-								active={underline}
-								iconSize={16}
-							></ToggleButton>
-							<HighlightButton applyColor={applyHighlight}></HighlightButton>
-							<FontColorButton applyColor={applyFontColor}></FontColorButton>
-							<ClearFormattingButton onClick={clearFormatting}></ClearFormattingButton>
-							<FontButton applyStyle={applyFontStyle}></FontButton>
-						</span>
-						<span className="vertical-separator"></span>
-						<span>
-							<BulletButton applyStyle={applyBullet}></BulletButton>
-							<OutdentButton onClick={applyOutdent}></OutdentButton>
-							<IndentButton onClick={applyIndent}></IndentButton>
-							<JustifyButton applyStyle={applyJustify}></JustifyButton>
-						</span>
-
-					</div>
-				</div>
+				<div className="header"></div>
+				<Ribbon state={ribbonState} setState={setRibbonState} editorRef={editorRef}></Ribbon>
 			</header>
 			<main>
 				<nav>
@@ -713,19 +512,21 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 							initialValue={initialPageContent}
 							onEditorChange={e => updatePageContent(e)}
 							onSelectionChange={(e, editor) => {
-								const fontName = editor.queryCommandValue('FontName');
-								const fontSize = editor.queryCommandValue('FontSize');
-								const bold = editor.queryCommandState('Bold');
 								const { undoManager } = editor;
 
-								setFontFamily(fontName)
-								setFontSize(fontSize)
-								setBold(bold)
-								setItalic(editor.queryCommandState('Italic'))
-								setUnderline(editor.queryCommandState('Underline'));
-								setHasRedo(undoManager.hasRedo());
-								setHasUndo(undoManager.hasUndo());
-								setTextSelection(editor.selection.getContent({ format: 'text' }));
+								setRibbonState((oldState) => {
+									return {
+										...oldState,
+										fontFamily: editor.queryCommandValue('FontName'),
+										fontSize: editor.queryCommandValue('FontSize'),
+										bold: editor.queryCommandState('Bold'),
+										italic: editor.queryCommandState('Italic'),
+										underline: editor.queryCommandState('Underline'),
+										hasRedo: undoManager.hasRedo(),
+										hasUndo: undoManager.hasUndo(),
+										textSelection: editor.selection.getContent({ format: 'text' })
+									}
+								})
 							}}
 							onInit={(evt, editor) => {
 								editorRef.current = editor
