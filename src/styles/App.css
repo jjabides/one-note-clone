@@ -134,6 +134,20 @@ ul li:nth-of-type(3) {}
   background-color: rgb(163, 163, 163, 0.5);
 }
 
+.no-highlight {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.no-highlight:focus {
+  outline: none !important;
+}
+
 h1,
 h2,
 h3,
@@ -160,6 +174,10 @@ h5 {
 
 .pad-0-8 {
   padding: 0px 8px;
+}
+
+.pad-4 {
+  padding: 4px;
 }
 
 .context-menu {

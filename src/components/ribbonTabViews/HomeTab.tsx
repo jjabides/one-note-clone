@@ -14,6 +14,7 @@ import { Editor as TinyMCEEditor } from "tinymce";
 import Bold from "../../images/Bold.svg";
 import Italic from "../../images/Italic.svg";
 import Underline from "../../images/Underline.svg";
+import AlphaNumericButton from "../AlphaNumericButton";
 
 interface HomeTabProps {
     state: RibbonState;
@@ -145,6 +146,14 @@ export default function HomeTab({ editorRef, state, setState }: HomeTabProps) {
         if (!editorRef.current) return;
         editorRef.current.execCommand(action);
     }
+
+    function applyAlphaNumericList(style: string) {
+        if (!editorRef.current) return;
+        editorRef.current.execCommand('InsertOrderedList', false, {
+            'list-style-type': style,
+        })
+    }
+
     return <>
         <span>
             <UndoRedoDropdown applyUndoRedo={executeUndoRedo} hasUndo={state.hasUndo} hasRedo={state.hasRedo}></UndoRedoDropdown>
@@ -194,6 +203,7 @@ export default function HomeTab({ editorRef, state, setState }: HomeTabProps) {
         <span className="vertical-separator"></span>
         <span>
             <BulletButton applyStyle={applyBullet}></BulletButton>
+            <AlphaNumericButton applyStyle={applyAlphaNumericList}></AlphaNumericButton>
             <OutdentButton onClick={applyOutdent}></OutdentButton>
             <IndentButton onClick={applyIndent}></IndentButton>
             <JustifyButton applyStyle={applyJustify}></JustifyButton>

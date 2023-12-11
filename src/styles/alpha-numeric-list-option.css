@@ -1,0 +1,45 @@
+.alpha-numeric-list-option {
+    -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.alpha-numeric-list-option:focus {
+    outline: none !important;
+}
+
+.alpha-numeric-option-wrapper {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    border: 4px solid transparent;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.alpha-numeric-option-wrapper:hover, .alpha-numeric-option-wrapper.selected {
+    border-color: gray;
+}
+
+.alpha-numeric-list-option ol {
+    padding-left: 20px;
+    padding-right: 6px;
+    margin: 0px;
+    margin-block: 0px;
+}
+
+.alpha-numeric-list-option li {
+    width: 100% !important;
+    height: auto !important;
+}
+
+.alpha-numeric-list-option li .line {
+    height: 2px;
+    background-color: gray;
+    display: inline-block;
+    margin-bottom: 3px;
+}
