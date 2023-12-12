@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../styles/NavGroup.css";
+import "../styles/navGroup.css";
 import Section_Icon from "../images/Section_Icon.svg";
 import CustomScrollbar from "./CustomScrollbar";
 

@@ -112,7 +112,7 @@ export default function HomeTab({ editorRef, state, setState }: HomeTabProps) {
 
     function applyFontStyle(style: string) {
         if (!editorRef.current) return;
-        editorRef.current.execCommand(style);
+        editorRef.current.execCommand(style as string);
     }
 
     function applyBullet(style: string) {
@@ -198,7 +198,7 @@ export default function HomeTab({ editorRef, state, setState }: HomeTabProps) {
             <HighlightButton applyColor={applyHighlight}></HighlightButton>
             <FontColorButton applyColor={applyFontColor}></FontColorButton>
             <ClearFormattingButton onClick={clearFormatting}></ClearFormattingButton>
-            <FontStyleButton applyStyle={applyFontStyle}></FontStyleButton>
+            <FontStyleButton applyStyle={applyFontStyle} {...state}></FontStyleButton>
         </span>
         <span className="vertical-separator"></span>
         <span>

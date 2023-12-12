@@ -7,4 +7,7 @@ interface RibbonState {
     hasUndo: boolean;
     hasRedo: boolean;
     textSelection: string;
+    subscript: boolean;
+    superscript: boolean;
+    strikethrough: boolean;
 }

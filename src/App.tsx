@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react'
-import './styles/App.css'
+import './styles/app.css'
 import { IDBPDatabase } from 'idb';
 import Modal from './components/Modal';
 import NavGroup from './components/NavGroup';
@@ -75,7 +75,10 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		underline: false,
 		hasUndo: false,
 		hasRedo: false,
-		textSelection: ''
+		textSelection: '',
+		subscript: false,
+		superscript: false,
+		strikethrough: false,
 	})
 
 	// Update pages when selectedSection changes 
@@ -537,6 +540,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 										const { undoManager } = editor;
 
 										setRibbonState((oldState) => {
+
 											return {
 												...oldState,
 												fontFamily: editor.queryCommandValue('FontName'),
@@ -546,7 +550,10 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 												underline: editor.queryCommandState('Underline'),
 												hasRedo: undoManager.hasRedo(),
 												hasUndo: undoManager.hasUndo(),
-												textSelection: editor.selection.getContent({ format: 'text' })
+												textSelection: editor.selection.getContent({ format: 'text' }),
+												subscript: editor.queryCommandState('Subscript'),
+												superscript: editor.queryCommandState('Superscript'),
+												strikethrough: editor.queryCommandState('Strikethrough'),
 											}
 										})
 									}}

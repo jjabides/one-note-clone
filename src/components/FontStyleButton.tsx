@@ -5,13 +5,14 @@ import Superscript from "../images/Superscript.svg";
 import Strikethrough from "../images/Strikethrough.svg";
 import "../styles/font-style-button.css";
 
-type FontStyle = 'Subscript' | 'Superscript' | 'Strikethrough';
-
 interface FontButtonProps {
-    applyStyle: (style: FontStyle) => void;
+    applyStyle: (style: string) => void;
+    subscript: boolean;
+    superscript: boolean;
+    strikethrough: boolean;
 }
 
-export default function FontStyleButton({ applyStyle }: FontButtonProps) {
+export default function FontStyleButton({ applyStyle, subscript, superscript, strikethrough }: FontButtonProps) {
     const [open, setOpen] = useState<boolean>(false);
     const fontBtnRef = useRef<HTMLElement>()
 
@@ -38,7 +39,7 @@ export default function FontStyleButton({ applyStyle }: FontButtonProps) {
         setOpen(false);
     }
 
-    function selectFontStyle(style: FontStyle) {
+    function selectFontStyle(style: string) {
         applyStyle(style);
         setOpen(false);
     }
@@ -51,15 +52,15 @@ export default function FontStyleButton({ applyStyle }: FontButtonProps) {
             open && <div className="font-style-menu dropdown-window">
                 <h5>Font</h5>
                 <ul>
-                    <li className="flex-center-vertical btn" onClick={() => selectFontStyle('Subscript')}>
+                    <li className={`flex-center-vertical btn ${subscript && 'selected'}`} onClick={() => selectFontStyle('Subscript')}>
                         <img src={Subscript} className="size-16-16"/>
                         <span>Subscript</span>
                     </li>
-                    <li className="flex-center-vertical btn" onClick={() => selectFontStyle('Superscript')}> 
+                    <li className={`flex-center-vertical btn ${superscript && 'selected'}`} onClick={() => selectFontStyle('Superscript')}> 
                         <img src={Superscript} className="size-16-16"/>
                         <span>Superscript</span>
                     </li>
-                    <li className="flex-center-vertical btn" onClick={() => selectFontStyle('Strikethrough')}>
+                    <li className={`flex-center-vertical btn ${strikethrough && 'selected'}`} onClick={() => selectFontStyle('Strikethrough')}>
                         <img src={Strikethrough} className="size-16-16"/>
                         <span>Strikethrough</span>
                     </li>
