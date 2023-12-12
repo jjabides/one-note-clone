@@ -5,6 +5,7 @@ import NumberList from "../images/NumberList.svg"
 
 interface AlphaNumericButtonProps {
     applyStyle: (style: string) => void;
+    listStyle: string;
 }
 
 const alphaNumericOptions = [
@@ -15,8 +16,12 @@ const alphaNumericOptions = [
     'upper-roman',
 ]
 
-export default function AlphaNumericButton({ applyStyle }: AlphaNumericButtonProps) {
+export default function AlphaNumericButton({ applyStyle, listStyle }: AlphaNumericButtonProps) {
     const [alphaNumericList, setAlphaNumericList] = useState<string>('decimal');
+
+    useEffect(() => {
+        setAlphaNumericList(listStyle === '' ? 'decimal' : listStyle)
+    }, [listStyle])
 
     function selectStyle(e: React.MouseEvent, style: string) {
         setAlphaNumericList(style);
@@ -36,7 +41,7 @@ export default function AlphaNumericButton({ applyStyle }: AlphaNumericButtonPro
                     {
                         alphaNumericOptions.map((style) =>
                             <div 
-                            className={`alpha-numeric-option-wrapper ${style === alphaNumericList ? 'selected' : ''}`} 
+                            className={`alpha-numeric-option-wrapper ${listStyle === style ? 'selected' : ''}`} 
                             key={style} 
                             onClick={e => selectStyle(e, style)}>
                                 <AlphaNumericListOption listStyle={style}></AlphaNumericListOption>
