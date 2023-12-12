@@ -11,4 +11,5 @@ interface RibbonState {
     superscript: boolean;
     strikethrough: boolean;
     listStyle: string;
+    justify: string;
 }

@@ -80,6 +80,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		superscript: false,
 		strikethrough: false,
 		listStyle: '',
+		justify: '',
 	})
 
 	// Update pages when selectedSection changes 
@@ -545,6 +546,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 											let selectedBlocks = editor.selection.getSelectedBlocks();
 											let selectedBlock = selectedBlocks[0]
 											let listStyle = (selectedBlock ? selectedBlock.parentElement?.style.listStyleType : '') as string;
+											let justifyStates = ['JustifyLeft', 'JustifyRight', 'JustifyCenter'];
 
 											return {
 												...oldState,
@@ -559,7 +561,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 												subscript: editor.queryCommandState('Subscript'),
 												superscript: editor.queryCommandState('Superscript'),
 												strikethrough: editor.queryCommandState('Strikethrough'),
-												listStyle: listStyle
+												listStyle: listStyle,
+												justify: justifyStates.find(state => editor.queryCommandState(state)) as string
 											}
 										})
 									}}

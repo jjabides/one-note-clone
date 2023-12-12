@@ -206,7 +206,7 @@ export default function HomeTab({ editorRef, state, setState }: HomeTabProps) {
             <AlphaNumericButton applyStyle={applyAlphaNumericList} listStyle={state.listStyle}></AlphaNumericButton>
             <OutdentButton onClick={applyOutdent}></OutdentButton>
             <IndentButton onClick={applyIndent}></IndentButton>
-            <JustifyButton applyStyle={applyJustify}></JustifyButton>
+            <JustifyButton applyStyle={applyJustify} justify={state.justify}></JustifyButton>
         </span>
     </>
 }
