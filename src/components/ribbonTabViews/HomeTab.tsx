@@ -202,7 +202,7 @@ export default function HomeTab({ editorRef, state, setState }: HomeTabProps) {
         </span>
         <span className="vertical-separator"></span>
         <span>
-            <BulletButton applyStyle={applyBullet}></BulletButton>
+            <BulletButton applyStyle={applyBullet} listStyle={state.listStyle}></BulletButton>
             <AlphaNumericButton applyStyle={applyAlphaNumericList}></AlphaNumericButton>
             <OutdentButton onClick={applyOutdent}></OutdentButton>
             <IndentButton onClick={applyIndent}></IndentButton>

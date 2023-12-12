@@ -1,6 +1,6 @@
 import ButtonDropdown from "./ButtonDropdown";
 import BulletList from "../images/BulletList.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/bullet-menu.css";
 
 const bulletStyles = [
@@ -10,10 +10,15 @@ const bulletStyles = [
 ]
 interface BulletButtonProps {
     applyStyle: (value: string) => void;
+    listStyle: string;
 }
 
-export default function BulletButton({ applyStyle }: BulletButtonProps) {
+export default function BulletButton({ applyStyle, listStyle }: BulletButtonProps) {
     const [bullet, setBullet] = useState<string>('disc');
+
+    useEffect(() => {
+        setBullet(listStyle === '' ? 'disc' : listStyle)
+    }, [listStyle])
 
     function selectBullet(e: React.MouseEvent, style: string) {
         setBullet(style);
@@ -32,7 +37,7 @@ export default function BulletButton({ applyStyle }: BulletButtonProps) {
                 <div className="bullet-options flex-center-vertical">
                     {
                         bulletStyles.map(style =>
-                            <div key={style} className={`bullet-cont flex-center ${bullet === style ? 'selected' : ''}`} onClick={e => selectBullet(e, style)}>
+                            <div key={style} className={`bullet-cont flex-center ${listStyle === style ? 'selected' : ''}`} onClick={e => selectBullet(e, style)}>
                                 <div className={style}></div>
                             </div>
                         )

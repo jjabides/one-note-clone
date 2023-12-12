@@ -79,6 +79,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		subscript: false,
 		superscript: false,
 		strikethrough: false,
+		listStyle: '',
 	})
 
 	// Update pages when selectedSection changes 
@@ -541,6 +542,10 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 
 										setRibbonState((oldState) => {
 
+											let selectedBlocks = editor.selection.getSelectedBlocks();
+											let selectedBlock = selectedBlocks[0]
+											let listStyle = (selectedBlock ? selectedBlock.parentElement?.style.listStyleType : '') as string;
+
 											return {
 												...oldState,
 												fontFamily: editor.queryCommandValue('FontName'),
@@ -554,6 +559,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 												subscript: editor.queryCommandState('Subscript'),
 												superscript: editor.queryCommandState('Superscript'),
 												strikethrough: editor.queryCommandState('Strikethrough'),
+												listStyle: listStyle
 											}
 										})
 									}}

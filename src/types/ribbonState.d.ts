@@ -10,4 +10,5 @@ interface RibbonState {
     subscript: boolean;
     superscript: boolean;
     strikethrough: boolean;
+    listStyle: string;
 }
