@@ -12,6 +12,7 @@ import Arrow_No_Tail from "./images/Arrow_No_Tail.svg";
 import Notebook_Icon from "./images/Notebook.svg";
 import Section_Icon from "./images/Section_Icon.svg";
 import { standardColors } from './utilities/colorOptions';
+import CustomScrollbar from './components/CustomScrollbar';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -512,7 +513,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						</div>
 					</div>
 				</nav>
-				<section className="content" style={{ backgroundColor: selectedPage ? 'white' : 'rgb(243, 238, 243)'}}>
+				<section className="content" style={{ backgroundColor: selectedPage ? 'white' : 'rgb(243, 238, 243)' }}>
 					<div className="title-cont">
 						{selectedPage &&
 							<>
@@ -525,42 +526,43 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						}
 					</div>
 					<div className="content-body">
-						{
-							selectedPage &&
-							<Editor
-								apiKey='oiveiviekj3iuvnfezlpcb3hkw6cqf60akeo58hxw0v56evb'
-								initialValue={initialPageContent}
-								onEditorChange={e => updatePageContent(e)}
-								onSelectionChange={(e, editor) => {
-									const { undoManager } = editor;
+						<CustomScrollbar>
+							{
+								selectedPage &&
+								<Editor
+									apiKey='oiveiviekj3iuvnfezlpcb3hkw6cqf60akeo58hxw0v56evb'
+									initialValue={initialPageContent}
+									onEditorChange={e => updatePageContent(e)}
+									onSelectionChange={(e, editor) => {
+										const { undoManager } = editor;
 
-									setRibbonState((oldState) => {
-										return {
-											...oldState,
-											fontFamily: editor.queryCommandValue('FontName'),
-											fontSize: editor.queryCommandValue('FontSize'),
-											bold: editor.queryCommandState('Bold'),
-											italic: editor.queryCommandState('Italic'),
-											underline: editor.queryCommandState('Underline'),
-											hasRedo: undoManager.hasRedo(),
-											hasUndo: undoManager.hasUndo(),
-											textSelection: editor.selection.getContent({ format: 'text' })
-										}
-									})
-								}}
-								onInit={(evt, editor) => {
-									editorRef.current = editor
-								}}
-								init={{
-									menubar: false,
-									toolbar: false,
-									statusbar: false,
-									content_style: 'p { font-family: Calibri; }',
-									plugins: ['lists', 'autoresize'],
-									resize: true
-								}}></Editor>
-						}
-
+										setRibbonState((oldState) => {
+											return {
+												...oldState,
+												fontFamily: editor.queryCommandValue('FontName'),
+												fontSize: editor.queryCommandValue('FontSize'),
+												bold: editor.queryCommandState('Bold'),
+												italic: editor.queryCommandState('Italic'),
+												underline: editor.queryCommandState('Underline'),
+												hasRedo: undoManager.hasRedo(),
+												hasUndo: undoManager.hasUndo(),
+												textSelection: editor.selection.getContent({ format: 'text' })
+											}
+										})
+									}}
+									onInit={(evt, editor) => {
+										editorRef.current = editor
+									}}
+									init={{
+										menubar: false,
+										toolbar: false,
+										statusbar: false,
+										content_style: 'p { font-family: Calibri; }',
+										plugins: ['lists', 'autoresize'],
+										resize: true
+									}}></Editor>
+							}
+						</CustomScrollbar>
 					</div>
 				</section>
 			</main>
