@@ -557,7 +557,12 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 										menubar: false,
 										toolbar: false,
 										statusbar: false,
-										content_style: 'p { font-family: Calibri; }',
+										content_style: `
+										body {
+											font-family: Calibri; 
+											font-size: 14px; 
+										}
+										`,
 										plugins: ['lists', 'autoresize'],
 										resize: true
 									}}></Editor>
