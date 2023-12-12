@@ -116,8 +116,6 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
   margin-block: unset;
   padding-inline: unset;
 }
@@ -151,6 +149,13 @@ ul li:nth-of-type(3) {}
 
 .btn:focus {
   outline: none !important;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
 }
 
 .btn:hover,
@@ -251,7 +256,7 @@ h5 {
 .dragged-item {
   position: absolute;
   height: 40px;
-  width: 256px;
+  width: 188px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
