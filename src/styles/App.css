@@ -69,6 +69,8 @@ section.content {
   grid-template-rows: auto 1fr;
   gap: 8px;
   padding: 8px;
+  overflow: hidden;
+  /* background-color: rgb(243, 238, 243) !important; */
 }
 
 section .page-content {
@@ -92,10 +94,21 @@ section .page-content {
   border-bottom: 1px solid rgba(1, 1, 1, 0.3);
 }
 
+.content-body {
+  overflow: scroll;
+}
+
 .page-content {
   background-color: transparent;
   color: black;
   padding: 0px 8px;
+}
+
+.tox.tox-tinymce {
+  min-height: 100%;
+  border-radius: 2px;
+  min-width: 512px;
+  border: none;
 }
 
 ul {

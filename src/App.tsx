@@ -253,7 +253,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 			name: name,
 			pageOrder: [],
 			date: new Date(),
-			iconColor: standardColors[ Math.floor(Math.random() * standardColors.length)]
+			iconColor: standardColors[Math.floor(Math.random() * standardColors.length)]
 		}
 
 		const ids = [...sections.map(section => section.id), newSection.id];
@@ -435,7 +435,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						<div className="notebook-nav-header flex-center-vertical gap-8 pad-0-8">
 							<img className="size-18-18" src={Notebook_Icon} />
 							<b>Your Notebook</b>
-							<img className="size-10-10" src={Arrow_No_Tail} draggable="false" style={{ rotate: '180deg' }}/>
+							<img className="size-10-10" src={Arrow_No_Tail} draggable="false" style={{ rotate: '180deg' }} />
 						</div>
 						<div className="notebook-nav-body">
 							<NavGroup
@@ -512,7 +512,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						</div>
 					</div>
 				</nav>
-				<section className="content">
+				<section className="content" style={{ backgroundColor: selectedPage ? 'white' : 'rgb(243, 238, 243)'}}>
 					<div className="title-cont">
 						{selectedPage &&
 							<>
@@ -524,42 +524,44 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 							</>
 						}
 					</div>
-					{
-						selectedPage &&
-						<Editor
-							apiKey='oiveiviekj3iuvnfezlpcb3hkw6cqf60akeo58hxw0v56evb'
-							initialValue={initialPageContent}
-							onEditorChange={e => updatePageContent(e)}
-							onSelectionChange={(e, editor) => {
-								const { undoManager } = editor;
+					<div className="content-body">
+						{
+							selectedPage &&
+							<Editor
+								apiKey='oiveiviekj3iuvnfezlpcb3hkw6cqf60akeo58hxw0v56evb'
+								initialValue={initialPageContent}
+								onEditorChange={e => updatePageContent(e)}
+								onSelectionChange={(e, editor) => {
+									const { undoManager } = editor;
 
-								setRibbonState((oldState) => {
-									return {
-										...oldState,
-										fontFamily: editor.queryCommandValue('FontName'),
-										fontSize: editor.queryCommandValue('FontSize'),
-										bold: editor.queryCommandState('Bold'),
-										italic: editor.queryCommandState('Italic'),
-										underline: editor.queryCommandState('Underline'),
-										hasRedo: undoManager.hasRedo(),
-										hasUndo: undoManager.hasUndo(),
-										textSelection: editor.selection.getContent({ format: 'text' })
-									}
-								})
-							}}
-							onInit={(evt, editor) => {
-								editorRef.current = editor
-							}}
-							init={{
-								height: 500,
-								menubar: false,
-								toolbar: false,
-								statusbar: false,
-								content_style: 'p { font-family: Calibri; }',
-								plugins: ['lists']
-							}}></Editor>
-					}
+									setRibbonState((oldState) => {
+										return {
+											...oldState,
+											fontFamily: editor.queryCommandValue('FontName'),
+											fontSize: editor.queryCommandValue('FontSize'),
+											bold: editor.queryCommandState('Bold'),
+											italic: editor.queryCommandState('Italic'),
+											underline: editor.queryCommandState('Underline'),
+											hasRedo: undoManager.hasRedo(),
+											hasUndo: undoManager.hasUndo(),
+											textSelection: editor.selection.getContent({ format: 'text' })
+										}
+									})
+								}}
+								onInit={(evt, editor) => {
+									editorRef.current = editor
+								}}
+								init={{
+									menubar: false,
+									toolbar: false,
+									statusbar: false,
+									content_style: 'p { font-family: Calibri; }',
+									plugins: ['lists', 'autoresize'],
+									resize: true
+								}}></Editor>
+						}
 
+					</div>
 				</section>
 			</main>
 			{
