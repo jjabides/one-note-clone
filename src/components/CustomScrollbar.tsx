@@ -21,14 +21,39 @@ export default function CustomScrollbar({ children, showScroll = true }: React.P
     useEffect(() => {
         resizeObserverRef.current.observe(scrollContentRef.current as HTMLElement);
         window.addEventListener('mouseup', onMouseUp);
-        window.addEventListener('resize', recalculate)
+        window.addEventListener('resize', recalculate);
+
+
+        return () => {
+            resizeObserverRef.current.disconnect();
+            window.removeEventListener('mouseup', onMouseUp);
+            window.removeEventListener('resize', recalculate)
+
+        }
     }, []);
 
-    useEffect(() => () => {
-        resizeObserverRef.current.disconnect();
-        window.removeEventListener('mouseup', onMouseUp);
-        window.removeEventListener('resize', recalculate)
-    }, []);
+    useEffect(() => {
+        const onMouseMove = (e: MouseEvent) => {
+            if (!mouseDown || !scrollContainerRef.current) return;
+            const { clientHeight, scrollHeight } = scrollContainerRef.current
+
+            // Get y position based on mouse position relative to page
+            const { y } = scrollContainerRef.current.getBoundingClientRect();
+            let posY = e.pageY - y - offsetFromThumbTop;
+
+            // clamp new offset
+            const thumbOffset = Math.max(0, Math.min(posY, clientHeight - thumbHeight));
+
+            // convert thumb offset to scroll container offset
+            const newOffset = (thumbOffset / clientHeight) * scrollHeight;
+            scrollContainerRef.current.scrollTo({ top: newOffset })
+        }
+        window.addEventListener('mousemove', onMouseMove);
+
+        return () => {
+            window.removeEventListener('mousemove', onMouseMove);
+        }
+    }, [mouseDown, offsetFromThumbTop, thumbHeight])
 
     function onScroll(e: React.MouseEvent) {
         recalculate();
@@ -61,21 +86,11 @@ export default function CustomScrollbar({ children, showScroll = true }: React.P
 
     }
 
-    function onMouseMove(e: React.MouseEvent) {
-        if (!mouseDown || !scrollContainerRef.current) return;
-        const { clientHeight, scrollHeight } = scrollContainerRef.current
-
-        let posY = e.nativeEvent.offsetY - offsetFromThumbTop;
-        const thumbOffset = Math.max(0, Math.min(posY, clientHeight - thumbHeight));
-        const newOffset = (thumbOffset / clientHeight) * scrollHeight;
-        scrollContainerRef.current.scrollTo({ top: newOffset })
-    }
-
     function onMouseUp(e: MouseEvent) {
         setMouseDown(false);
     }
 
-    return <div className="custom-scrollbar" style={{ gridTemplateColumns: canScroll ? '1fr auto' : '1fr 0px'}}>
+    return <div className="custom-scrollbar" style={{ gridTemplateColumns: canScroll ? '1fr auto' : '1fr 0px' }}>
         <div className="scroll-container" ref={scrollContainerRef as any} onScroll={onScroll as any}>
             <div className="scroll-content" ref={scrollContentRef as any}>
                 {children}
@@ -95,7 +110,7 @@ export default function CustomScrollbar({ children, showScroll = true }: React.P
                     }}></div>
             </div>}
         {
-            mouseDown && <div className="event-capture" onMouseMove={onMouseMove}></div>
+            mouseDown && <div className="cover"></div>
         }
     </div>
 }
