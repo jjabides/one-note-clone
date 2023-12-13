@@ -13,6 +13,8 @@ import Notebook_Icon from "./images/Notebook.svg";
 import Section_Icon from "./images/Section_Icon.svg";
 import { standardColors } from './utilities/colorOptions';
 import CustomScrollbar from './components/CustomScrollbar';
+import tippy, { followCursor, roundArrow } from 'tippy.js';
+import "./styles/tooltip.css";
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -81,6 +83,24 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		strikethrough: false,
 		listStyle: '',
 		justify: '',
+	})
+
+	useEffect(() => {
+		const instances = tippy('[data-tippy-content]', {
+			placement: 'bottom',
+			offset: [0, 24],
+			followCursor: 'initial',
+			delay: [500, 0],
+			duration: 0,
+			onShow: ((instance) => {
+				if (instance.props.content === "") return false;
+			}),
+			plugins: [followCursor],
+		});
+
+		return () => {
+			instances.forEach(tooltip => tooltip.destroy())
+		}
 	})
 
 	// Update pages when selectedSection changes 

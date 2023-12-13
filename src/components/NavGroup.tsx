@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/navGroup.css";
 import Section_Icon from "../images/Section_Icon.svg";
 import CustomScrollbar from "./CustomScrollbar";
+import tippy from "tippy.js";
 
 export default function NavGroup({
     items,
@@ -120,7 +121,8 @@ export default function NavGroup({
                             onClick={() => updateSelectedItemId(item.id)}
                             onMouseDown={(e) => onMouseDown(e, item, index)}
                             onContextMenu={e => onContextMenu(e, item)}
-                            style={getSectionStyle(index) as any}>
+                            style={getSectionStyle(index) as any}
+                            data-tippy-content={item.name}>
                             {
                                 (item as Section).iconColor &&
                                 <div className="size-18-18 flex-center">

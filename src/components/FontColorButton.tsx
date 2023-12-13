@@ -33,6 +33,7 @@ export default function FontColorButton({ applyColor }: FontColorButtonProps) {
 
     return <ButtonDropdown
         onClick={() => applyColor(color)}
+        tooltip="Font Color"
         buttonContent={
             <svg viewBox="0,0,2048,2048" focusable="false">
                 <path type="path" d="M 2048 2048 h -2048 v -512 h 2048 m -589 -102 l -147 -410 h -571 l -143 410 h -137 l 507 -1332 h 124 l 504 1332 m -569 -1169 h -4 l -240 658 h 487 z"></path>

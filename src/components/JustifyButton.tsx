@@ -3,6 +3,9 @@ import JustifyCenter from "../images/JustifyCenter.svg";
 import JustifyRight from "../images/JustifyRight.svg";
 import Arrow_No_Tail from "../images/Arrow_No_Tail.svg";
 import { useEffect, useRef, useState } from "react";
+import Tooltip from "./Tooltip";
+import { Props } from "tippy.js";
+import { ribbonTippyProps } from "../utilities/tippyProps";
 
 interface JustifyButtonProps {
     applyStyle: (style: string) => void;
@@ -12,6 +15,7 @@ interface JustifyButtonProps {
 export default function JustifyButton({ applyStyle, justify }: JustifyButtonProps) {
     const [open, setOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLElement>();
+    const tippyProps = useRef<Props>(ribbonTippyProps)
 
     useEffect(() => {
         window.addEventListener('click', onWindowClick)
@@ -39,17 +43,20 @@ export default function JustifyButton({ applyStyle, justify }: JustifyButtonProp
     function selectStyle(e: React.MouseEvent, style: string) {
         applyStyle(style)
         e.target.dispatchEvent(new Event('close-dropdown', { bubbles: true }))
+        setOpen(false);
     }
 
     return <div className="justify-button position-relative" ref={dropdownRef as any}>
-        <div className="btn grid-auto-auto border-radius-4" onClick={() => setOpen(!open)}>
-            <div className="icon-wrapper flex-center size-32-32">
-                <img src={JustifyLeft} draggable="false" className="size-16-16" />
+        <Tooltip props={{ ...tippyProps.current, content: 'Paragraph Alignment' }}>
+            <div className="btn grid-auto-auto border-radius-4" onClick={() => setOpen(!open)}>
+                <div className="icon-wrapper flex-center size-32-32">
+                    <img src={JustifyLeft} draggable="false" className="size-16-16" />
+                </div>
+                <div className="dropdown-arrow-wrapper flex-center size-16-32">
+                    <img src={Arrow_No_Tail} className="size-10-10" draggable="false" style={{ rotate: '180deg' }} />
+                </div>
             </div>
-            <div className="dropdown-arrow-wrapper flex-center size-16-32">
-                <img src={Arrow_No_Tail} className="size-10-10" draggable="false" style={{ rotate: '180deg' }} />
-            </div>
-        </div>
+        </Tooltip>
         {
             open &&
             <div className="justify-button-menu dropdown-window pad-8">

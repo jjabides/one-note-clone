@@ -31,6 +31,7 @@ export default function AlphaNumericButton({ applyStyle, listStyle }: AlphaNumer
 
     return <ButtonDropdown
         onClick={() => applyStyle(alphaNumericList)}
+        tooltip="Numbering"
         buttonContent={
             <img className="size-18-18" src={NumberList} draggable="false" />
         }

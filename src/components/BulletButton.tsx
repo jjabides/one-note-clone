@@ -28,6 +28,7 @@ export default function BulletButton({ applyStyle, listStyle }: BulletButtonProp
 
     return <ButtonDropdown
         onClick={() => applyStyle(bullet)}
+        tooltip="Bullets"
         buttonContent={
             <img className="size-18-18" src={BulletList} draggable="false" />
         }

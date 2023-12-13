@@ -4,6 +4,9 @@ import Cut from "../images/Cut.svg";
 import Copy from "../images/Copy.svg"
 import Paste from "../images/Paste.svg";
 import Arrow_No_Tail from "../images/Arrow_No_Tail.svg";
+import Tooltip from "./Tooltip";
+import { Props } from "tippy.js";
+import { ribbonTippyProps } from "../utilities/tippyProps";
 
 interface ClipboardDropdownProps {
     applyClipboardAction: (action: ClipboardAction) => void;
@@ -14,6 +17,7 @@ interface ClipboardDropdownProps {
 export default function ClipboardDropdown({ applyClipboardAction, canCut, canCopy }: ClipboardDropdownProps) {
     const [open, setOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLElement>();
+    const tippyProps = useRef<Props>(ribbonTippyProps)
 
     useEffect(() => {
         window.addEventListener('click', onWindowClick)
@@ -44,33 +48,35 @@ export default function ClipboardDropdown({ applyClipboardAction, canCut, canCop
     }
 
     return <div className="clipboard-dropdown position-relative" ref={dropdownRef as any}>
-        <div className="btn grid-auto-auto border-radius-4" onClick={() => setOpen(!open)}>
-            <div className="clipboard-icon-wrapper flex-center size-32-32">
-                <img src={Clipboard} draggable="false" className="size-18-18" />
+        <Tooltip props={{ ...tippyProps.current, content: 'Clipboard' }}>
+            <div className="btn grid-auto-auto border-radius-4" onClick={() => setOpen(!open)}>
+                <div className="clipboard-icon-wrapper flex-center size-32-32">
+                    <img src={Clipboard} draggable="false" className="size-18-18" />
+                </div>
+                <div className="dropdown-arrow-wrapper flex-center size-16-32">
+                    <img src={Arrow_No_Tail} className="size-10-10" draggable="false" style={{ rotate: '180deg' }} />
+                </div>
             </div>
-            <div className="dropdown-arrow-wrapper flex-center size-16-32">
-                <img src={Arrow_No_Tail} className="size-10-10" draggable="false" style={{ rotate: '180deg' }} />
-            </div>
-        </div>
+        </Tooltip>
         {
             open &&
             <div className="clipboard-menu dropdown-window">
                 <ul>
-                    <li 
-                    className={`pad-8 btn flex-center-vertical gap-8 ${!canCut ? 'uninteractive' : ''}`}
-                    onClick={() => selectOption('Cut')}>
+                    <li
+                        className={`pad-8 btn flex-center-vertical gap-8 ${!canCut ? 'uninteractive' : ''}`}
+                        onClick={() => selectOption('Cut')}>
                         <img className="size-18-18" src={Cut} draggable="false" />
                         <span>Cut</span>
                     </li>
-                    <li 
-                    className={`pad-8 btn flex-center-vertical gap-8 ${!canCopy ? 'uninteractive' : ''}`}
-                    onClick={() => selectOption('Copy')}>
+                    <li
+                        className={`pad-8 btn flex-center-vertical gap-8 ${!canCopy ? 'uninteractive' : ''}`}
+                        onClick={() => selectOption('Copy')}>
                         <img className="size-18-18" src={Copy} draggable="false" />
                         <span>Copy</span>
                     </li>
-                    <li 
-                    className="pad-8 btn flex-center-vertical gap-8"
-                    onClick={() => selectOption('Paste')}>
+                    <li
+                        className="pad-8 btn flex-center-vertical gap-8"
+                        onClick={() => selectOption('Paste')}>
                         <img className="size-18-18" src={Paste} draggable="false" />
                         <span>Paste</span>
                     </li>

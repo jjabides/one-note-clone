@@ -15,6 +15,11 @@ import Bold from "../../images/Bold.svg";
 import Italic from "../../images/Italic.svg";
 import Underline from "../../images/Underline.svg";
 import AlphaNumericButton from "../AlphaNumericButton";
+import { useRef } from "react";
+import tippy, { Props } from "tippy.js";
+import Tooltip from "../Tooltip";
+import "tippy.js/dist/svg-arrow.css";
+import { ribbonTippyProps } from "../../utilities/tippyProps";
 
 interface HomeTabProps {
     state: RibbonState;
@@ -50,6 +55,8 @@ const fontSizes = [
 ]
 
 export default function HomeTab({ editorRef, state, setState }: HomeTabProps) {
+    const tippyProps = useRef<Props>(ribbonTippyProps)
+
     function updateFontFamily(value: string) {
         if (!editorRef.current) return;
         editorRef.current.execCommand('FontName', false, value);
@@ -177,35 +184,47 @@ export default function HomeTab({ editorRef, state, setState }: HomeTabProps) {
             ></Dropdown>
         </span>
         <span>
-            <ToggleButton
-                icon={Bold}
-                onClick={updateBold}
-                active={state.bold}
-                iconSize={16}
-            ></ToggleButton>
-            <ToggleButton
-                icon={Italic}
-                onClick={updateItalic}
-                active={state.italic}
-                iconSize={16}
-            ></ToggleButton>
-            <ToggleButton
-                icon={Underline}
-                onClick={updateUnderline}
-                active={state.underline}
-                iconSize={16}
-            ></ToggleButton>
+            <Tooltip props={{ ...tippyProps.current, content: 'Bold' }}>
+                <ToggleButton
+                    icon={Bold}
+                    onClick={updateBold}
+                    active={state.bold}
+                    iconSize={16}
+                ></ToggleButton>
+            </Tooltip>
+            <Tooltip props={{ ...tippyProps.current, content: 'Italic' }}>
+                <ToggleButton
+                    icon={Italic}
+                    onClick={updateItalic}
+                    active={state.italic}
+                    iconSize={16}
+                ></ToggleButton>
+            </Tooltip>
+            <Tooltip props={{ ...tippyProps.current, content: 'Underline' }}>
+                <ToggleButton
+                    icon={Underline}
+                    onClick={updateUnderline}
+                    active={state.underline}
+                    iconSize={16}
+                ></ToggleButton>
+            </Tooltip>
             <HighlightButton applyColor={applyHighlight}></HighlightButton>
             <FontColorButton applyColor={applyFontColor}></FontColorButton>
-            <ClearFormattingButton onClick={clearFormatting}></ClearFormattingButton>
+            <Tooltip props={{ ...tippyProps.current, content: 'Clear Formatting' }}>
+                <ClearFormattingButton onClick={clearFormatting}></ClearFormattingButton>
+            </Tooltip>
             <FontStyleButton applyStyle={applyFontStyle} {...state}></FontStyleButton>
         </span>
         <span className="vertical-separator"></span>
         <span>
             <BulletButton applyStyle={applyBullet} listStyle={state.listStyle}></BulletButton>
             <AlphaNumericButton applyStyle={applyAlphaNumericList} listStyle={state.listStyle}></AlphaNumericButton>
-            <OutdentButton onClick={applyOutdent}></OutdentButton>
-            <IndentButton onClick={applyIndent}></IndentButton>
+            <Tooltip props={{ ...tippyProps.current, content: 'Decrease Indent' }}>
+                <OutdentButton onClick={applyOutdent}></OutdentButton>
+            </Tooltip>
+            <Tooltip props={{ ...tippyProps.current, content: 'Increase Indent' }}>
+                <IndentButton onClick={applyIndent}></IndentButton>
+            </Tooltip>
             <JustifyButton applyStyle={applyJustify} justify={state.justify}></JustifyButton>
         </span>
     </>

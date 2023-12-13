@@ -36,6 +36,7 @@ export default function HighlightButton({ applyColor }: HighlightButton) {
 
     return <ButtonDropdown
         onClick={() => applyColor(color)}
+        tooltip="Highlight"
         buttonContent={
             <svg height="100%" width="100%" viewBox="0,0,2048,2048" focusable="false">
                 <path type="path" className="" d="M 2048 2048 h -2048 v -307 h 2048 m -177 -1492 q 38 38 57 85 q 18 47 18 97 q 0 49 -18 96 q -19 47 -57 85 l -905 905 l -249 19 v 102 h -615 l 308 -204 l 51 -280 l 71 -72 h -1 l 905 -905 q 38 -38 85 -56 q 47 -19 96 -19 q 50 0 97 19 q 47 18 85 56 m 0 362 q 21 -21 33 -49 q 11 -29 11 -60 q -1 -30 -12 -58 q -11 -28 -32 -50 l -73 -73 q -21 -21 -49 -32 q -29 -12 -59 -12 q -32 1 -60 12 q -28 11 -49 32 l -833 833 l 290 290 z"></path>

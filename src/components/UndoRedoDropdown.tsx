@@ -3,6 +3,9 @@ import Redo from "../images/Redo.svg";
 import { useEffect, useRef, useState } from "react";
 import DropdownButton from "./DropdownButton";
 import "../styles/undo-redo-dropdown.css";
+import Tooltip from "./Tooltip";
+import { Props } from "tippy.js";
+import { ribbonTippyProps } from "../utilities/tippyProps";
 
 interface UndoRedoDropdownProps {
     applyUndoRedo: (command: 'Undo' | 'Redo') => void;
@@ -12,7 +15,8 @@ interface UndoRedoDropdownProps {
 
 export default function UndoRedoDropdown({ applyUndoRedo, hasUndo, hasRedo }: UndoRedoDropdownProps) {
     const [open, setOpen] = useState<boolean>(false);
-    const dropdownRef = useRef<HTMLElement>()
+    const dropdownRef = useRef<HTMLElement>();
+    const tippyProps = useRef<Props>(ribbonTippyProps)
 
     useEffect(() => {
         window.addEventListener('click', onWindowClick)
@@ -43,9 +47,11 @@ export default function UndoRedoDropdown({ applyUndoRedo, hasUndo, hasRedo }: Un
     }
 
     return <div className="undo-redo-dropdown" ref={dropdownRef as any}>
-        <div className={`undo-btn-icon-wrapper flex-center size-32-32 btn ${hasUndo ? '' : 'uninteractive'}`} onClick={() => applyUndoRedo('Undo')}>
-            <img src={Undo} className="size-18-18" draggable="false" />
-        </div>
+        <Tooltip props={{ ...tippyProps.current, content: 'Undo' }}>
+            <div className={`undo-btn-icon-wrapper flex-center size-32-32 btn ${hasUndo ? '' : 'uninteractive'}`} onClick={() => applyUndoRedo('Undo')}>
+                <img src={Undo} className="size-18-18" draggable="false" />
+            </div>
+        </Tooltip>
         <DropdownButton active={open} onClick={() => setOpen(!open)}></DropdownButton>
         {
             open && <div className="undo-redo-dropdown-menu dropdown-window">
@@ -55,7 +61,7 @@ export default function UndoRedoDropdown({ applyUndoRedo, hasUndo, hasRedo }: Un
                         <span>Undo</span>
                     </li>
                     <li className={`btn flex-center-vertical gap-8 pad-8 ${hasRedo ? '' : 'uninteractive'}`} onClick={() => selectOption('Redo')}>
-                        <img src={Redo} draggable="false" className="size-18-18"/>
+                        <img src={Redo} draggable="false" className="size-18-18" />
                         <span>Redo</span>
                     </li>
                 </ul>

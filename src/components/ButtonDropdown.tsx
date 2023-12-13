@@ -1,16 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import "../styles/button-dropdown.css";
 import DropdownButton from "./DropdownButton";
+import { Props } from "tippy.js";
+import { ribbonTippyProps } from "../utilities/tippyProps";
+import Tooltip from "./Tooltip";
 
 interface ButtonDropdown {
     onClick: () => void;
     buttonContent: any;
     menu: React.ReactElement;
+    tooltip: string;
 }
 
-export default function ButtonDropdown({ buttonContent, menu, onClick }: ButtonDropdown) {
+export default function ButtonDropdown({ buttonContent, menu, onClick, tooltip }: ButtonDropdown) {
     const [open, setOpen] = useState<boolean>(false);
     const buttonDropdownRef = useRef<HTMLDivElement>();
+    const tippyProps = useRef<Props>(ribbonTippyProps)
 
     useEffect(() => {
         window.addEventListener('click', onWindowClick)
@@ -42,10 +47,12 @@ export default function ButtonDropdown({ buttonContent, menu, onClick }: ButtonD
     }
 
     return <div className="button-dropdown" ref={buttonDropdownRef as any}>
-        <div className="execute-btn btn" onClick={onClick}>
-            { buttonContent }
-        </div>
+        <Tooltip props={{...tippyProps.current, content: tooltip }}>
+            <div className="execute-btn btn" onClick={onClick}>
+                {buttonContent}
+            </div>
+        </Tooltip>
         <DropdownButton active={open} onClick={() => setOpen(!open)}></DropdownButton>
-        { open && menu }
+        {open && menu}
     </div>
 }
