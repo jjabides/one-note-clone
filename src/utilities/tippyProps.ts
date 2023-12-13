@@ -7,7 +7,7 @@ export const ribbonTippyProps: Props = {
     theme: 'white',
     arrow: `
         <svg height="10" width="10" viewBox="0 0 100 100">
-            <polygon points="0,100 50,0 100,100 Z" style="fill:white; stroke: white;"></polygon>
+            <polygon points="0,100 50,0 100,100 0,100" style="fill:white; stroke: white;"></polygon>
         </svg>
         `
 } as Props;

@@ -8,9 +8,11 @@ import { Editor as TinyMCEEditor } from "tinymce";
 import Ribbon from './components/Ribbon';
 import Notebooks_Icon from "./images/Notebooks.svg";
 import Search_Icon from "./images/Search.svg";
+import OneNote_App_Launcher from "./images/OneNote_App_Launcher.svg";
+import OneNote_Icon from "./images/Microsoft_Office_OneNote.svg";
+import User_Icon from "./images/User_Icon.svg";
 import Arrow_No_Tail from "./images/Arrow_No_Tail.svg";
 import Notebook_Icon from "./images/Notebook.svg";
-import Section_Icon from "./images/Section_Icon.svg";
 import { standardColors } from './utilities/colorOptions';
 import CustomScrollbar from './components/CustomScrollbar';
 import tippy, { followCursor, roundArrow } from 'tippy.js';
@@ -161,7 +163,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 	}
 
 	function onContextMenu(e: any, items?: ContextMenuItem[]) {
-		e.preventDefault();
+		//e.preventDefault();
 		e.stopPropagation();
 
 		if (!items) {
@@ -444,7 +446,19 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 	return (
 		<div className="app" onContextMenu={e => onContextMenu(e, undefined)} onClick={e => e.button === 0 && setContextMenu(undefined)}>
 			<header>
-				<div className="header"></div>
+				<div className="header-top">
+					<span className="btn size-48-48 flex-center">
+						<img className="size-18-18" src={OneNote_App_Launcher} draggable="false" />
+					</span>
+					<span>
+						<span className="size-48-48 flex-center">
+							<img className="size-20-20" src={OneNote_Icon} draggable="false" />
+						</span>
+					</span>
+					<span className="flex-center-vertical size-48-48 pad-8">
+						<img className="size-32-32" src={User_Icon} draggable="false" />
+					</span>
+				</div>
 				<Ribbon state={ribbonState} setState={setRibbonState} editorRef={editorRef}></Ribbon>
 			</header>
 			<main>
