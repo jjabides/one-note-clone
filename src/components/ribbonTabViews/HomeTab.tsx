@@ -30,6 +30,7 @@ interface HomeTabProps {
 const fonts = [
     'Arial',
     'Calibri',
+    'Cambria',
     'Comic Sans MS',
     'Consolas',
     'Corbel',

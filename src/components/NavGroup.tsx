@@ -11,7 +11,6 @@ export default function NavGroup({
     onContextMenu,
     addItemButton,
     onUpdateOrder,
-    backgroundColor,
     placeHolderItemTitle }: NavGroup) {
 
     // variables for dragging state
@@ -126,7 +125,6 @@ export default function NavGroup({
     }
 
     return <div className="nav-group"
-        style={{ backgroundColor }}
         onMouseOver={() => setHover(true)}
         onMouseOut={() => setHover(false)}>
         <CustomScrollbar showScroll={hover}>

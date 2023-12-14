@@ -535,7 +535,6 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 										})
 								}}
 								onUpdateOrder={updateSectionOrder}
-								backgroundColor={'#f1f1f1'}
 							></NavGroup>
 							<NavGroup
 								selectedItemId={selectedPageId}
@@ -567,12 +566,11 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 									onClick: addPage
 								}}
 								onUpdateOrder={updatePageOrder}
-								backgroundColor={'#f1f1f1'}
 								placeHolderItemTitle='Untitled Page'></NavGroup>
 						</div>
 					</div>
 				</nav>
-				<section className="content" style={{ backgroundColor: selectedPage ? 'white' : 'rgb(243, 238, 243)' }}>
+				<section className="content" style={{ backgroundColor: selectedPage ? 'white' : 'rgb(249, 241, 248)' }}>
 					<div className="title-cont">
 						{selectedPage &&
 							<>

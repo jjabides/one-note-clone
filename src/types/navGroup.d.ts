@@ -5,7 +5,6 @@ interface NavGroup {
     onContextMenu: (e: any, item: NavGroupItem) => void;
     addItemButton: AddItemButton;
     onUpdateOrder: (items: NavGroupItem[]) => void;
-    backgroundColor?: string;
     placeHolderItemTitle?: string;
 }
 
