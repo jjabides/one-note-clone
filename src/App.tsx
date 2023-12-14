@@ -506,7 +506,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 												title: 'Permanently Delete Section',
 												description:
 													<div className="flex-center-vertical gap-12">
-														<span className="size-42-42">
+														<span className="size-36-36">
 															<WarningIcon></WarningIcon>
 														</span>
 														<span>
@@ -521,7 +521,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 									}
 								])}
 								addItemButton={{
-									title: 'Add Section',
+									title: 'Add section',
 									onClick: () => setModal(
 										{
 											title: 'Add Section',
@@ -546,7 +546,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 											title: 'Delete Page?',
 											description:
 												<div className="flex-center-vertical gap-12">
-													<span className="size-42-42">
+													<span className="size-36-36">
 														<WarningIcon></WarningIcon>
 													</span>
 													<span>
@@ -560,7 +560,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 									}
 								}])}
 								addItemButton={{
-									title: 'Add Page',
+									title: 'Add page',
 									onClick: addPage
 								}}
 								onUpdateOrder={updatePageOrder}

@@ -220,7 +220,7 @@ export default function NavGroup({
             </ul>
         </CustomScrollbar>
         <div
-            className="btn pad-12-16"
+            className="add-btn btn pad-8-16"
             onClick={addItemButton.onClick}>
             {addItemButton.title}
         </div>
