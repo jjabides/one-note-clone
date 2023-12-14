@@ -100,6 +100,10 @@ section .page-content {
   border-bottom: 1px solid rgba(1, 1, 1, 0.3);
 }
 
+.title-cont {
+  padding-left: 8px;
+}
+
 .content .timestamp {
   color: rgb(102, 102, 102);
   font-size: 12px;

@@ -641,7 +641,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 										body {
 											font-family: Calibri; 
 											font-size: 14px;
-											margin: 0px;
+											margin: 8px;
 										}
 										`,
 										plugins: ['lists', 'autoresize'],
