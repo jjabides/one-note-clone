@@ -17,6 +17,7 @@ import { sectionIconColors } from './utilities/colorOptions';
 import CustomScrollbar from './components/CustomScrollbar';
 import tippy, { followCursor, roundArrow } from 'tippy.js';
 import "./styles/tooltip.css";
+import WarningIcon from './components/WarningIcon';
 
 const CONTEXT_MENU_WIDTH = 200;
 const CONTEXT_MENU_ITEM_HEIGHT = 36;
@@ -503,7 +504,15 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 										action: () => {
 											setModal({
 												title: 'Permanently Delete Section',
-												description: 'Deleting a section can\'t be undone. Do you want to permanently delete this section and all of its pages?',
+												description:
+													<div className="flex-center-vertical gap-12">
+														<span className="size-42-42">
+															<WarningIcon></WarningIcon>
+														</span>
+														<span>
+															Deleting a section can't be undone. Do you want to permanently delete this section and all of its pages?
+														</span>
+													</div>,
 												onSubmit: () => { deleteSection(item.id) },
 												onCancel: () => { setModal(null) },
 												confirmBtnTitle: 'Permanently Delete'
@@ -535,7 +544,15 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 									action: () => {
 										setModal({
 											title: 'Delete Page?',
-											description: 'Are you sure you want to delete this page?',
+											description:
+												<div className="flex-center-vertical gap-12">
+													<span className="size-42-42">
+														<WarningIcon></WarningIcon>
+													</span>
+													<span>
+														Are you sure you want to permanently delete this page?
+													</span>
+												</div>,
 											onSubmit: () => { deletePage(item.id) },
 											onCancel: () => { setModal(null) },
 											confirmBtnTitle: 'Delete'
@@ -556,17 +573,17 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 					<div className="title-cont">
 						{selectedPage &&
 							<>
-								<div 
-								className="title" 
-								id="title" 
-								contentEditable="true" 
-								onKeyDown={e => {
-									if (e.key === "Enter") {
-										e.preventDefault();
-										editorRef.current?.focus();
-									}
-								}} 
-								onInput={e => updatePageName(e.currentTarget.textContent as string)}>{ }</div>
+								<div
+									className="title"
+									id="title"
+									contentEditable="true"
+									onKeyDown={e => {
+										if (e.key === "Enter") {
+											e.preventDefault();
+											editorRef.current?.focus();
+										}
+									}}
+									onInput={e => updatePageName(e.currentTarget.textContent as string)}>{ }</div>
 								<div className="timestamp">
 									<div className="date">{getFormatedDate(selectedPage.date)}</div>
 									<div className="time"></div>

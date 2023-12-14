@@ -1,7 +1,7 @@
 
 interface Modal {
     title: string,
-    description: string;
+    description: string | React.ReactHTMLElement;
     onSubmit: (value: string) => void;
     onCancel?: () => void;
     icon?: string;
