@@ -133,7 +133,7 @@ export default function NavGroup({
             <ul ref={ulRef as any}>
                 {
                     items && items.map((item, index) => (
-                        <li className={`btn flex-center-vertical gap-8 pad-8 ${item.id === selectedItemId ? 'selected' : ''}`} key={item.id}
+                        <li className={`btn flex-center-vertical pad-8 ${item.id === selectedItemId ? 'selected' : ''}`} key={item.id}
                             onClick={() => updateSelectedItemId(item.id)}
                             onContextMenu={e => onContextMenu(e, item)}
                             style={getSectionStyle(index) as any}
@@ -145,7 +145,7 @@ export default function NavGroup({
                             data-tippy-content={item.name}>
                             {
                                 (item as Section).iconColor &&
-                                <div className="size-18-18 flex-center">
+                                <div className="size-16-16 flex-center">
                                     <svg
                                         width="9.541153"
                                         height="31.957813"
@@ -175,7 +175,7 @@ export default function NavGroup({
                                     </svg>
                                 </div>
                             }
-                            <span className="ellipsis">
+                            <span className="ellipsis" style={{ marginLeft: '12px' }}>
                                 {item.name ? item.name : placeHolderItemTitle}
                             </span>
                         </li>
@@ -183,10 +183,10 @@ export default function NavGroup({
                 }
                 {
                     (draggedItem && mousePosition !== null) ?
-                        <div className="dragged-item pad-8 gap-8 flex-center-vertical" style={{ top: mousePosition + 'px' }}>
+                        <div className="dragged-item pad-8 flex-center-vertical" style={{ top: mousePosition + 'px' }}>
                             {
                                 (draggedItem as Section).iconColor &&
-                                <div className="size-18-18 flex-center">
+                                <div className="size-16-16 flex-center">
                                     <svg
                                         width="9.541153"
                                         height="31.957813"
@@ -216,7 +216,7 @@ export default function NavGroup({
                                     </svg>
                                 </div>
                             }
-                            <span className="ellipsis">
+                            <span className="ellipsis" style={{ marginLeft: '12px' }}>
                                 {draggedItem.name ? draggedItem.name : placeHolderItemTitle}
                             </span>
                         </div> : ""
@@ -224,7 +224,7 @@ export default function NavGroup({
             </ul>
         </CustomScrollbar>
         <div
-            className="add-btn btn pad-8-16"
+            className="add-btn btn flex-center-vertical pad-16"
             onClick={addItemButton.onClick}>
             {addItemButton.title}
         </div>

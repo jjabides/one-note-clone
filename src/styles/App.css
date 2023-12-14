@@ -216,6 +216,10 @@ h5 {
   padding: 4px;
 }
 
+.pad-0-10 {
+  padding: 0px 10px;
+}
+
 .context-menu {
   min-width: 128px;
   min-height: 36px;

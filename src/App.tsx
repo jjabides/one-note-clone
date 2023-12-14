@@ -468,9 +468,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 						<div className="side-nav-bar-item btn flex-center selected">
 							<img className="size-18-18" src={Notebooks_Icon} draggable="false" />
 						</div>
-						{/* <div className="side-nav-bar-item btn flex-center">
+						<div className="side-nav-bar-item btn flex-center">
 							<img className="size-20-20" src={Search_Icon} draggable="false" />
-						</div> */}
+						</div>
 					</div>
 					<div className="notebook-nav">
 						<div className="notebook-nav-header flex-center-vertical gap-8 pad-0-8">
