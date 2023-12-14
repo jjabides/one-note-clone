@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../styles/navGroup.css";
 import Section_Icon from "../images/Section_Icon.svg";
 import CustomScrollbar from "./CustomScrollbar";
@@ -22,8 +22,9 @@ export default function NavGroup({
     const [draggedItemOffset, setDraggedItemOffset] = useState<number>(0);
 
     const [hover, setHover] = useState<boolean>(false);
+    const ulRef = useRef<HTMLElement>()
 
-    function onMouseDown(e: any, item: NavGroupItem, index: number) {
+    function onMouseDown(e: React.MouseEvent, item: NavGroupItem, index: number) {
         setDraggedItemOffset(e.nativeEvent.offsetY);
         setDraggedItem(item);
         setOldIndex(index);
@@ -38,18 +39,18 @@ export default function NavGroup({
         setNewIndex(null);
     }
 
-    function onMouseMove(e: any) {
-        if (!draggedItem || !items) return;
+    function onMouseMove(e: React.MouseEvent) {
+        if (!draggedItem || !items || !ulRef.current) return;
         e.preventDefault();
-
-        const offsetTop = 190; // Offset from top of screen to ul
-        const y = e.clientY - offsetTop - draggedItemOffset;
-        let index = y / 40;
+        
+        const { y } = ulRef.current.getBoundingClientRect();
+        const posY = e.nativeEvent.pageY - y - draggedItemOffset;
+        let index = posY / 40;
         if (index < 0) index = 0;
         if (index > items.length - 1) index = items.length - 1;
 
         setNewIndex(Math.round(index));
-        setMousePosition(y);
+        setMousePosition(posY);
     }
 
     function updateOrder() {
@@ -114,7 +115,7 @@ export default function NavGroup({
         onMouseOver={() => setHover(true)}
         onMouseOut={() => setHover(false)}>
         <CustomScrollbar showScroll={hover}>
-            <ul onMouseMove={onMouseMove}>
+            <ul onMouseMove={onMouseMove} ref={ulRef as any}>
                 {
                     items && items.map((item, index) => (
                         <li className={`btn flex-center-vertical gap-8 pad-8 ${item.id === selectedItemId ? 'selected' : ''}`} key={item.id}
@@ -163,7 +164,7 @@ export default function NavGroup({
                 }
                 {
                     (draggedItem && mousePosition !== null) ?
-                        <div className="dragged-item pad-8 gap-8 flex-center-vertical" style={{ top: mousePosition + 'px' }}>
+                        <div className="dragged-item pad-8 gap-8 flex-center-vertical" style={{ top: mousePosition + 'px', pointerEvents: 'none' }}>
                             {
                                 (draggedItem as Section).iconColor &&
                                 <div className="size-18-18 flex-center">
