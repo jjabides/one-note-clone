@@ -13,8 +13,8 @@
   }
   
   .ribbon .tabs .tab {
-    width: 64px;
-    height: 36px;
+    width: 60px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -28,11 +28,22 @@
     -ms-user-select: none;
     user-select: none;
   }
+
+  .ribbon .tabs .tab.file:hover .tab-background {
+    width: 48px;
+    height: 28px;
+    border-radius: 4px;
+    background-color: rgb(224, 224, 224);
+  }
   
   .ribbon .tabs .tab:focus {
     outline: none !important;
   }
   
+  .ribbon .tabs .tab.selected {
+    font-weight: bold;
+  }
+
   .ribbon .tabs .tab.selected:hover~.select-indicator-wrapper .select-indicator {
     width: 100%;
   }
@@ -43,8 +54,8 @@
   }
   
   .tabs .select-indicator-wrapper {
-    width: 64px;
-    height: 36px;
+    width: 60px;
+    height: 34px;
     position: absolute;
     left: 0;
     display: flex;
@@ -59,9 +70,21 @@
     background-color: rgb(119, 25, 170);
     transition: width .2s;
   }
-  
-  .ribbon .tabs .tab:hover {
-    background-color: rgb(240, 240, 240);
+
+  .tabs .hover-indicator-wrapper {
+    width: 60px;
+    height: 34px;
+    position: absolute;
+    left: 0;
+    display: flex;
+    pointer-events: none;
+  }
+
+  .tabs .hover-indicator {
+    width: 70%;
+    height: 2px;
+    margin: auto auto 2px auto;
+    background-color: rgba(128, 128, 128, 0.568)
   }
   
   .ribbon .tools {

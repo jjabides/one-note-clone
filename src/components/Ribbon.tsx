@@ -33,9 +33,10 @@ interface RibbonProps {
 }
 
 export default function Ribbon(props: RibbonProps) {
-
     // Tab state
     const [selectedTabIndex, setSelectedTabIndex] = useState<number>(1);
+    const [hoveredTabIndex, setHoveredTabIndex] = useState<number>(-1);
+
     const TabView = useMemo(() => {
         const tabName = tabs[selectedTabIndex];
         return tabViews[`${tabName}Tab`];
@@ -44,31 +45,46 @@ export default function Ribbon(props: RibbonProps) {
 
     return <div className="ribbon">
         <div className="ribbon-top">
-            <div className="tabs">
+            <div className="tabs" onMouseOut={() => setHoveredTabIndex(-1)}>
                 {
                     tabs.map((tab, index) =>
                         <div
                             key={index}
                             className={`${tab.toLowerCase()} tab ${selectedTabIndex === index ? 'selected' : ''}`}
-                            onClick={() => setSelectedTabIndex(index)}>
-                            {tab}
+                            onClick={() => {
+                                if (tab === 'File') return;
+                                setSelectedTabIndex(index)
+                            }}
+                            onMouseOver={() => {
+                                if (selectedTabIndex === index || tab === 'File') return;
+                                setHoveredTabIndex(index);
+                            }}>
+                            <div className="tab-background flex-center">
+                                {tab}
+                            </div>
                         </div>
                     )
                 }
-                <div className="select-indicator-wrapper" style={{ transform: `translateX(${selectedTabIndex * 64}px)` }}>
+                <div className="select-indicator-wrapper" style={{ transform: `translateX(${selectedTabIndex * 60}px)` }}>
                     <div className="select-indicator"></div>
                 </div>
+                {
+                    hoveredTabIndex > -1 && hoveredTabIndex !== selectedTabIndex &&
+                    <div className="hover-indicator-wrapper" style={{ transform: `translateX(${hoveredTabIndex * 60}px)` }}>
+                        <div className="hover-indicator"></div>
+                    </div>
+                }
             </div>
             <div className="status flex-center-vertical gap-12">
                 <div className="editing-btn btn pad-8 flex-center-vertical gap-8">
                     <img src={Pencil} className="size-18-18" />
                     <span>Editing</span>
-                    <img src={Arrow_No_Tail} className="size-10-10" style={{ rotate: '180deg'}}/>
+                    <img src={Arrow_No_Tail} className="size-10-10" style={{ rotate: '180deg' }} />
                 </div>
                 <div className="share-btn btn pad-8 flex-center-vertical gap-8">
-                    <img src={Share_Icon} className="size-18-18"/>
+                    <img src={Share_Icon} className="size-18-18" />
                     <span>Share</span>
-                    <img src={Arrow_No_Tail} className="size-10-10" style={{ rotate: '180deg'}}/>
+                    <img src={Arrow_No_Tail} className="size-10-10" style={{ rotate: '180deg' }} />
                 </div>
             </div>
         </div>
