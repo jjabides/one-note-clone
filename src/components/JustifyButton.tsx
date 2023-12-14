@@ -59,7 +59,7 @@ export default function JustifyButton({ applyStyle, justify }: JustifyButtonProp
         </Tooltip>
         {
             open &&
-            <div className="justify-button-menu dropdown-window pad-8">
+            <div className="justify-button-menu dropdown-window">
                 <ul>
                     <li className={`flex-center-vertical gap-12 pad-8 btn ${justify === 'JustifyLeft' ? 'selected' : ''}`} onClick={e => selectStyle(e, 'JustifyLeft')}>
                         <img src={JustifyLeft} className="size-16-16"></img>
