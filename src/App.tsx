@@ -639,7 +639,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 										body {
 											font-family: Calibri; 
 											font-size: 14px;
-											margin: 8px;
+											margin: 0px 8px;
 										}
 										`,
 										plugins: ['lists', 'autoresize'],
