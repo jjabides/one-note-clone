@@ -49,10 +49,10 @@ export default function JustifyButton({ applyStyle, justify }: JustifyButtonProp
     return <div className="justify-button position-relative" ref={dropdownRef as any}>
         <Tooltip props={{ ...tippyProps.current, content: 'Paragraph Alignment' }}>
             <div className="btn grid-auto-auto border-radius-4" onClick={() => setOpen(!open)}>
-                <div className="icon-wrapper flex-center size-32-32">
+                <div className="icon-wrapper flex-center size-28-32">
                     <img src={JustifyLeft} draggable="false" className="size-16-16" />
                 </div>
-                <div className="dropdown-arrow-wrapper flex-center size-16-32">
+                <div className="dropdown-arrow-wrapper flex-center size-18-32">
                     <img src={Arrow_No_Tail} className="size-10-10" draggable="false" style={{ rotate: '180deg' }} />
                 </div>
             </div>

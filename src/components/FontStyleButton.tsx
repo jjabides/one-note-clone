@@ -50,7 +50,7 @@ export default function FontStyleButton({ applyStyle, subscript, superscript, st
 
     return <div className="font-style-button size-32-32" ref={fontBtnRef as any}>
         <Tooltip props={{ ...tippyProps.current, content: 'Font' }}>
-            <div className={`btn size-32-32 flex-center ${open ? 'selected' : ''}`} onClick={() => setOpen(!open)}>
+            <div className={`btn size-32-32 border-radius-4 flex-center ${open ? 'selected' : ''}`} onClick={() => setOpen(!open)}>
                 <img src={Ellipsis} draggable="false" className="size-18-18" />
             </div>
         </Tooltip>
@@ -58,15 +58,15 @@ export default function FontStyleButton({ applyStyle, subscript, superscript, st
             open && <div className="font-style-menu dropdown-window">
                 <h5>Font</h5>
                 <ul>
-                    <li className={`flex-center-vertical btn ${subscript && 'selected'}`} onClick={() => selectFontStyle('Subscript')}>
+                    <li className={`flex-center-vertical btn pad-8 ${subscript && 'selected'}`} onClick={() => selectFontStyle('Subscript')}>
                         <img src={Subscript} className="size-16-16" />
                         <span>Subscript</span>
                     </li>
-                    <li className={`flex-center-vertical btn ${superscript && 'selected'}`} onClick={() => selectFontStyle('Superscript')}>
+                    <li className={`flex-center-vertical btn pad-8 ${superscript && 'selected'}`} onClick={() => selectFontStyle('Superscript')}>
                         <img src={Superscript} className="size-16-16" />
                         <span>Superscript</span>
                     </li>
-                    <li className={`flex-center-vertical btn ${strikethrough && 'selected'}`} onClick={() => selectFontStyle('Strikethrough')}>
+                    <li className={`flex-center-vertical btn pad-8 ${strikethrough && 'selected'}`} onClick={() => selectFontStyle('Strikethrough')}>
                         <img src={Strikethrough} className="size-16-16" />
                         <span>Strikethrough</span>
                     </li>

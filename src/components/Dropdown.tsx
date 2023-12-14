@@ -53,7 +53,7 @@ export default function Dropdown({ options, selectedOption, setSelectedOption, w
                         options.map(option =>
                             <li
                                 key={option}
-                                className="btn"
+                                className="btn pad-16"
                                 style={{ fontFamily: option }}
                                 onClick={e => selectOption(option)}
                             >{option}</li>

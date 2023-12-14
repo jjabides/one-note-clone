@@ -48,7 +48,7 @@ export default function ButtonDropdown({ buttonContent, menu, onClick, tooltip }
 
     return <div className="button-dropdown" ref={buttonDropdownRef as any}>
         <Tooltip props={{...tippyProps.current, content: tooltip }}>
-            <div className="execute-btn btn" onClick={onClick}>
+            <div className="execute-btn btn border-radius-4-0-0-4" onClick={onClick}>
                 {buttonContent}
             </div>
         </Tooltip>

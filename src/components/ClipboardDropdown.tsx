@@ -50,10 +50,10 @@ export default function ClipboardDropdown({ applyClipboardAction, canCut, canCop
     return <div className="clipboard-dropdown position-relative" ref={dropdownRef as any}>
         <Tooltip props={{ ...tippyProps.current, content: 'Clipboard' }}>
             <div className="btn grid-auto-auto border-radius-4" onClick={() => setOpen(!open)}>
-                <div className="clipboard-icon-wrapper flex-center size-32-32">
+                <div className="clipboard-icon-wrapper flex-center size-28-32">
                     <img src={Clipboard} draggable="false" className="size-18-18" />
                 </div>
-                <div className="dropdown-arrow-wrapper flex-center size-16-32">
+                <div className="dropdown-arrow-wrapper flex-center size-18-32">
                     <img src={Arrow_No_Tail} className="size-10-10" draggable="false" style={{ rotate: '180deg' }} />
                 </div>
             </div>

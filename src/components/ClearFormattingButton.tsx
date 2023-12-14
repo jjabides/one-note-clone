@@ -7,7 +7,7 @@ interface ClearFormattingButtonProps {
 
 export default function ClearFormattingButton({ onClick }: ClearFormattingButtonProps) {
 
-    return <div className="clear-formatting-btn btn" onClick={onClick}>
+    return <div className="clear-formatting-btn btn border-radius-4" onClick={onClick}>
         <img src={ClearFormatting} draggable="false"/>
     </div>
 }

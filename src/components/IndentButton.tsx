@@ -6,7 +6,7 @@ interface IndentButtonProps {
 
 export default function IndentButton({ onClick }: IndentButtonProps) {
 
-    return <div className="indent-button btn size-32-32 flex-center" onClick={onClick}>
+    return <div className="indent-button btn size-32-32 flex-center border-radius-4" onClick={onClick}>
         <img src={Indent} className="size-16-16" draggable="false"/>
     </div>
 }

@@ -48,7 +48,7 @@ export default function UndoRedoDropdown({ applyUndoRedo, hasUndo, hasRedo }: Un
 
     return <div className="undo-redo-dropdown" ref={dropdownRef as any}>
         <Tooltip props={{ ...tippyProps.current, content: 'Undo' }}>
-            <div className={`undo-btn-icon-wrapper flex-center size-32-32 btn ${hasUndo ? '' : 'uninteractive'}`} onClick={() => applyUndoRedo('Undo')}>
+            <div className={`undo-btn-icon-wrapper flex-center size-32-32 border-radius-4-0-0-4 btn ${hasUndo ? '' : 'uninteractive'}`} onClick={() => applyUndoRedo('Undo')}>
                 <img src={Undo} className="size-18-18" draggable="false" />
             </div>
         </Tooltip>
