@@ -3,5 +3,5 @@ interface Section {
     name: string;
     pageOrder: string[];
     date: Date;
-    iconColor?: string;
+    iconColor: string;
 }

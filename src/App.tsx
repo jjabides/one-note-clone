@@ -13,7 +13,7 @@ import OneNote_Icon from "./images/Microsoft_Office_OneNote.svg";
 import User_Icon from "./images/User_Icon.svg";
 import Arrow_No_Tail from "./images/Arrow_No_Tail.svg";
 import Notebook_Icon from "./images/Notebook.svg";
-import { standardColors } from './utilities/colorOptions';
+import { sectionIconColors } from './utilities/colorOptions';
 import CustomScrollbar from './components/CustomScrollbar';
 import tippy, { followCursor, roundArrow } from 'tippy.js';
 import "./styles/tooltip.css";
@@ -281,7 +281,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 			name: name,
 			pageOrder: [],
 			date: new Date(),
-			iconColor: standardColors[Math.floor(Math.random() * standardColors.length)]
+			iconColor: sectionIconColors[Math.floor(Math.random() * sectionIconColors.length)]
 		}
 
 		const ids = [...sections.map(section => section.id), newSection.id];

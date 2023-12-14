@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { IDBPDatabase, openDB } from 'idb';
 import "./styles/initialization-layer.css";
 import App from "./App";
+import { sectionIconColors } from "./utilities/colorOptions";
 
 export default function InitializationLayer() {
     const [initialProps, setInitialProps] = useState<InitialProps>();
@@ -21,6 +22,7 @@ export default function InitializationLayer() {
                             name: "Section 1",
                             pageOrder: [pageId],
                             date: new Date(),
+                            iconColor: sectionIconColors[Math.floor(Math.random() * sectionIconColors.length)]
                         }
 
                         sectionsObjectStore.add(defaultSection)
