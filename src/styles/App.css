@@ -75,7 +75,7 @@ section.content {
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 8px;
-  padding: 8px;
+  padding: 8px 8px 8px 16px;
   overflow: hidden;
   /* background-color: rgb(243, 238, 243) !important; */
 }
@@ -92,7 +92,6 @@ section .page-content {
   border: none;
   color: black;
   font-size: 24px;
-  padding: 0px 8px;
   min-height: 40px;
   word-break: break-all;
   display: inline-block;

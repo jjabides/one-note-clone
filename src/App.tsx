@@ -591,7 +591,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 							</>
 						}
 					</div>
-					<div className="content-body">
+					<div className="content-body" onClick={e => editorRef.current?.focus()}>
 						<CustomScrollbar>
 							{
 								selectedPage &&
@@ -637,7 +637,8 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 										content_style: `
 										body {
 											font-family: Calibri; 
-											font-size: 14px; 
+											font-size: 14px;
+											margin: 0px;
 										}
 										`,
 										plugins: ['lists', 'autoresize'],
