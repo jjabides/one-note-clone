@@ -24,6 +24,16 @@ export default function NavGroup({
     const [hover, setHover] = useState<boolean>(false);
     const ulRef = useRef<HTMLElement>()
 
+    useEffect(() => {
+        window.addEventListener('mousemove', onMouseMove)
+        window.addEventListener('mouseup', onMouseUp);
+
+        return () => {
+            window.removeEventListener('mousemove', onMouseMove)
+            window.removeEventListener('mouseup', onMouseUp)
+        }
+    })
+
     function onMouseDown(e: React.MouseEvent, item: NavGroupItem, index: number) {
         setDraggedItemOffset(e.nativeEvent.offsetY);
         setDraggedItem(item);
@@ -39,12 +49,18 @@ export default function NavGroup({
         setNewIndex(null);
     }
 
-    function onMouseMove(e: React.MouseEvent) {
+    function onMouseMove(e: MouseEvent) {
         if (!draggedItem || !items || !ulRef.current) return;
+        if (mousePosition === null) {
+            const { y } = (ulRef.current as HTMLElement).getBoundingClientRect();
+            setMousePosition(e.pageY - y - e.offsetY)
+            return;
+        }
         e.preventDefault();
-        
+
         const { y } = ulRef.current.getBoundingClientRect();
-        const posY = e.nativeEvent.pageY - y - draggedItemOffset;
+        const posY = e.pageY - y - draggedItemOffset;
+
         let index = posY / 40;
         if (index < 0) index = 0;
         if (index > items.length - 1) index = items.length - 1;
@@ -110,12 +126,11 @@ export default function NavGroup({
     }
 
     return <div className="nav-group"
-        onMouseUp={onMouseUp}
         style={{ backgroundColor }}
         onMouseOver={() => setHover(true)}
         onMouseOut={() => setHover(false)}>
         <CustomScrollbar showScroll={hover}>
-            <ul onMouseMove={onMouseMove} ref={ulRef as any}>
+            <ul ref={ulRef as any}>
                 {
                     items && items.map((item, index) => (
                         <li className={`btn flex-center-vertical gap-8 pad-8 ${item.id === selectedItemId ? 'selected' : ''}`} key={item.id}
@@ -164,7 +179,7 @@ export default function NavGroup({
                 }
                 {
                     (draggedItem && mousePosition !== null) ?
-                        <div className="dragged-item pad-8 gap-8 flex-center-vertical" style={{ top: mousePosition + 'px', pointerEvents: 'none' }}>
+                        <div className="dragged-item pad-8 gap-8 flex-center-vertical" style={{ top: mousePosition + 'px' }}>
                             {
                                 (draggedItem as Section).iconColor &&
                                 <div className="size-18-18 flex-center">
