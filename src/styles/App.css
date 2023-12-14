@@ -78,7 +78,6 @@ section.content {
   gap: 8px;
   padding: 8px 8px 8px 16px;
   overflow: hidden;
-  /* background-color: rgb(243, 238, 243) !important; */
 }
 
 section .page-content {
@@ -234,7 +233,7 @@ h5 {
   min-height: 36px;
   position: absolute;
   background-color: white;
-  box-shadow: 0.5px 0.5px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0.5px 0.5px 3px rgba(0, 0, 0, 0.3);
   border-radius: 2px;
   animation: fade-in .2s forwards;
 }
