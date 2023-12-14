@@ -456,7 +456,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 							<img className="size-20-20" src={OneNote_Icon} draggable="false" />
 						</span>
 					</span>
-					<span className="flex-center-vertical size-48-48 pad-8">
+					<span className="btn flex-center-vertical size-48-48 pad-8">
 						<img className="size-32-32" src={User_Icon} draggable="false" />
 					</span>
 				</div>

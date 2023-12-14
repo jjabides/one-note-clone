@@ -34,7 +34,7 @@ export default function NavGroup({
         }
     })
 
-    function onMouseDown(e: React.MouseEvent, item: NavGroupItem, index: number) {
+    function onDragStart(e: React.MouseEvent, item: NavGroupItem, index: number) {
         setDraggedItemOffset(e.nativeEvent.offsetY);
         setDraggedItem(item);
         setOldIndex(index);
@@ -135,9 +135,13 @@ export default function NavGroup({
                     items && items.map((item, index) => (
                         <li className={`btn flex-center-vertical gap-8 pad-8 ${item.id === selectedItemId ? 'selected' : ''}`} key={item.id}
                             onClick={() => updateSelectedItemId(item.id)}
-                            onMouseDown={(e) => onMouseDown(e, item, index)}
                             onContextMenu={e => onContextMenu(e, item)}
                             style={getSectionStyle(index) as any}
+                            onDragStart={e => {
+                                onDragStart(e, item, index)
+                                e.preventDefault();
+                            }}
+                            draggable="true"
                             data-tippy-content={item.name}>
                             {
                                 (item as Section).iconColor &&
