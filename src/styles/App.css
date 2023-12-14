@@ -100,6 +100,11 @@ section .page-content {
   border-bottom: 1px solid rgba(1, 1, 1, 0.3);
 }
 
+.content .timestamp {
+  color: rgb(102, 102, 102);
+  font-size: 12px;
+}
+
 .content-body {
   overflow: hidden;
   height: 100%;
@@ -398,6 +403,10 @@ h5 {
 
 .gap-8 {
   gap: 8px;
+}
+
+.gap-10 {
+  gap: 10px;
 }
 
 .gap-12 {

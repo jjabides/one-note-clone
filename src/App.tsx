@@ -420,11 +420,14 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 		weekDay = WEEK_MAP[weekDay];
 		month = MONTH_MAP[month];
 
+		return `${weekDay}, ${month} ${day}, ${year}`;
+	}
+
+	function getFormattedTime(date: Date) {
 		let hours = date.getHours() === 12 ? 12 : (date.getHours() % 12);
 		let minutes = (date.getMinutes() + "").padStart(2, "0");
 		let meridiem = date.getHours() < 12 ? "AM" : "PM";
-
-		return `${weekDay}, ${month} ${day}, ${year} ${hours}:${minutes} ${meridiem}`
+		return `${hours}:${minutes} ${meridiem}`;
 	}
 
 	function updateSectionOrder(items: NavGroupItem[]) {
@@ -584,9 +587,9 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 										}
 									}}
 									onInput={e => updatePageName(e.currentTarget.textContent as string)}>{ }</div>
-								<div className="timestamp">
-									<div className="date">{getFormatedDate(selectedPage.date)}</div>
-									<div className="time"></div>
+								<div className="timestamp flex-center-vertical gap-12">
+									<span className="date">{getFormatedDate(selectedPage.date)}</span>
+									<span className="time">{getFormattedTime(selectedPage.date)}</span>
 								</div>
 							</>
 						}
