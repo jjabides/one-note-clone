@@ -163,7 +163,7 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 	}
 
 	function onContextMenu(e: any, items?: ContextMenuItem[]) {
-		//e.preventDefault();
+		e.preventDefault();
 		e.stopPropagation();
 
 		if (!items) {
@@ -556,7 +556,17 @@ function App({ initialProps }: { initialProps: InitialProps }) {
 					<div className="title-cont">
 						{selectedPage &&
 							<>
-								<div className="title" id="title" contentEditable="true" onInput={e => updatePageName(e.currentTarget.textContent as string)}>{ }</div>
+								<div 
+								className="title" 
+								id="title" 
+								contentEditable="true" 
+								onKeyDown={e => {
+									if (e.key === "Enter") {
+										e.preventDefault();
+										editorRef.current?.focus();
+									}
+								}} 
+								onInput={e => updatePageName(e.currentTarget.textContent as string)}>{ }</div>
 								<div className="timestamp">
 									<div className="date">{getFormatedDate(selectedPage.date)}</div>
 									<div className="time"></div>
