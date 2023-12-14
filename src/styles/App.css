@@ -101,7 +101,7 @@ section .page-content {
 }
 
 .title-cont {
-  padding-left: 8px;
+  padding: 0px 16px 0px 8px;
 }
 
 .content .timestamp {
@@ -234,7 +234,7 @@ h5 {
   position: absolute;
   background-color: white;
   box-shadow: 0.5px 0.5px 4px;
-  border-radius: 6px;
+  border-radius: 2px;
   animation: fade-in .2s forwards;
 }
 
