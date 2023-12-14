@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "../styles/navGroup.css";
+import "../styles/nav-group.css";
 import Section_Icon from "../images/Section_Icon.svg";
 import CustomScrollbar from "./CustomScrollbar";
 import tippy from "tippy.js";
